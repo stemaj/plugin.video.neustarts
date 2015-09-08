@@ -37,3 +37,5 @@
 - Fixed trailer listing
 2.1.5
 - Fixed trailer listing
+2.1.5.1
+- Fix for next-site navigation
