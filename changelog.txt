@@ -39,3 +39,5 @@
 - Fixed trailer listing
 2.1.5.1
 - Fix for next-site navigation
+2.1.5.2.
+- Added "This Week De" and "This Week USA"
