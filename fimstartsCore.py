@@ -5,6 +5,7 @@ import urllib2
 import re
 import httplib
 import socket
+import datetime
 
 def getUrl(url):
     error = ''
@@ -20,7 +21,10 @@ def getUrl(url):
     except urllib2.URLError as e:
         error = 'Reason: ', e.reason
     except Exception as e:
-        error = 'Other reason'
+        if e.message:
+            error = e.message
+        else:
+            error = 'Other reason'
     if not error:
         try:
             link = response.read()
@@ -31,18 +35,35 @@ def getUrl(url):
         except Exception as e:
             error = e.message
     
-    if response:
-        response.close()
+    if not error:
+        if response:
+            response.close()
 
     return (link, error)
 
+
 socket.setdefaulttimeout(5) # timeout in seconds
+prev = datetime.datetime.now()
+next = datetime.datetime.now()
 
 
 def getmatches(url):
+    global prev
+    global next
+
     site = getUrl(url)
     if not site[0]:
         return site[1]
+
+    # findout the "current" donnerstag
+    a = site[0].split('calendar_picker\">\n')
+    b = a[1].split('breaker')
+    c = re.compile("(.+?) <a>", re.DOTALL).findall(b[0])[0]
+    day, month, year = (int(x) for x in c.split('.'))
+    current = datetime.date(year, month, day)
+
+    prev = current - datetime.timedelta(days=7)
+    next = current + datetime.timedelta(days=7)
 
     data = []
     boxes = site[0].split('data_box">')
@@ -62,16 +83,43 @@ def getmatches(url):
 
     return (titles,trailerUrls,bilderUrls)
 
-#Test
+
+def getUrlSuffixWeek(previous):
+
+    global prev
+    global next
+
+    if (previous):
+        datum = prev
+    else:
+        datum = next
+
+    mon = str(datum.month)
+    day = str(datum.day)
+
+    if (len(mon) == 1):
+        mon = '0' + mon
+    if (len(day) == 1):
+        day = '0' + day
+
+    return "?week=" + str(datum.year) + "-" + mon + "-" + day
+
+
+##Test
 #baseUrl = "http://www.filmstarts.de"
 #url = baseUrl + '/filme-vorschau/de/'
 ##url = baseUrl + '/filme-vorschau/usa/'
+
+#url = 'http://www.filmstarts.de/filme-vorschau/de/?week=2015-10-29'
 
 #matches = getmatches(url)
 #for i in range(len(matches[0])): 
 #    ee = matches[0][i]
 #    ff = matches[1][i]
 #    gg = matches[2][i]
-#    hh = 5
+    
 
+#x = getUrlSuffixWeek(True)
+#y = getUrlSuffixWeek(False)
 
+#hh = 5

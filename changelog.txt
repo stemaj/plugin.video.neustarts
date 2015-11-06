@@ -41,3 +41,5 @@
 - Fix for next-site navigation
 2.1.5.2.
 - Added "This Week De" and "This Week USA"
+2.1.5.3.
+- Added "previous" and "next" week (WIP)
