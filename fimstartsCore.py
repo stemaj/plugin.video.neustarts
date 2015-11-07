@@ -105,21 +105,38 @@ def getUrlSuffixWeek(previous):
     return "?week=" + str(datum.year) + "-" + mon + "-" + day
 
 
-##Test
+###Test
 #baseUrl = "http://www.filmstarts.de"
 #url = baseUrl + '/filme-vorschau/de/'
-##url = baseUrl + '/filme-vorschau/usa/'
+###url = baseUrl + '/filme-vorschau/usa/'
 
-#url = 'http://www.filmstarts.de/filme-vorschau/de/?week=2015-10-29'
+##url = 'http://www.filmstarts.de/filme-vorschau/de/?week=2015-10-29'
 
 #matches = getmatches(url)
-#for i in range(len(matches[0])): 
-#    ee = matches[0][i]
-#    ff = matches[1][i]
-#    gg = matches[2][i]
+##for i in range(len(matches[0])): 
+##    ee = matches[0][i]
+##    ff = matches[1][i]
+##    gg = matches[2][i]
     
 
-#x = getUrlSuffixWeek(True)
-#y = getUrlSuffixWeek(False)
+#urlm1 = getUrlSuffixWeek(True)
+##y = getUrlSuffixWeek(False)
+
+#bla = url + urlm1
+
+#if bla.find('?') != -1:
+#    bla = bla.split('?')[0]
+
+
+
+#matches = getmatches(url + urlm1)
+#urlm2 = getUrlSuffixWeek(True)
+
+#matches = getmatches(url + urlm2)
+#urlm3 = getUrlSuffixWeek(False)
+
+#matches = getmatches(url + urlm3)
+#urlm4 = getUrlSuffixWeek(True)
+
 
 #hh = 5

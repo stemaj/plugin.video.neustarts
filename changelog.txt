@@ -43,3 +43,5 @@
 - Added "This Week De" and "This Week USA"
 2.1.5.3.
 - Added "previous" and "next" week (WIP)
+2.1.5.4
+- "previous" and "next" week

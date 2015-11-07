@@ -62,8 +62,11 @@ def listVideosOwn(urlFull):
     for i in range(len(matches[0])): 
         addDir(matches[0][i], baseUrl + matches[1][i], "listTrailers", get_better_thumb(matches[2][i]))
 
-    addDir('--> Woche danach', urlFull + fimstartsCore.getUrlSuffixWeek(False), "listVideosOwn", '')
-    addDir('<-- Woche zuvor', urlFull + fimstartsCore.getUrlSuffixWeek(True), "listVideosOwn", '')
+    if urlFull.find('?') != -1:
+        urlFull = urlFull.split('?')[0]
+
+    addDir('--> Woche danach (' + fimstartsCore.next.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(False), "listVideosOwn", '')
+    addDir('<-- Woche zuvor (' + fimstartsCore.prev.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(True), "listVideosOwn", '')
 
     xbmcplugin.endOfDirectory(pluginhandle)
 
