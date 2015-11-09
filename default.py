@@ -39,15 +39,14 @@ def index():
     addDir('Trailer: Top', baseUrl + '/trailer/beliebteste.html', "listVideos", '')
     addDir('Trailer: Aktuell im Kino', baseUrl + '/trailer/imkino/', "listVideos", '')
     addDir('Trailer: Demnächst im Kino', baseUrl + '/trailer/bald/', "listVideos", '')
-    addDir('Trailer: Diese Woche: Deutschland', baseUrl + '/filme-vorschau/de/', "listVideosOwn", '')
-    addDir('Trailer: Diese Woche: USA', baseUrl + '/filme-vorschau/usa/', "listVideosOwn", '')
+    addDir('Trailer: Diese Woche: Deutschland', baseUrl + '/filme-vorschau/de/', "listVideosFilmByDate", '')
+    addDir('Trailer: Diese Woche: USA', baseUrl + '/filme-vorschau/usa/', "listVideosFilmByDate", '')
     addDir('Filmstarts: Fünf Sterne', baseUrl + '/videos/shows/funf-sterne', "listVideos", '')
     addDir('Filmstarts: Interviews', baseUrl + '/trailer/interviews/', "listVideos", '')
     addDir('Filmstarts: Fehlerteufel', baseUrl + '/videos/shows/filmstarts-fehlerteufel', "listVideos", '')
     addDir('Meine Lieblings-Filmszene', baseUrl + '/videos/shows/meine-lieblings-filmszene', "listVideos", '')
-    addDir('Serien-Trailer', baseUrl + '/serien/videos/neueste/', "listVideos", '')
+    addDir('Trailer: Die besten amerikanischen Serien', baseUrl + '/serien/beste/produktionsland-5002/?page=1', "listVideosSeries", '')
     xbmcplugin.endOfDirectory(pluginhandle)
-
 
 def showSortDirection(url):
     addDir(translation(30006), url.replace("?version=1", "?sort_order=2&version=1"), "listVideos", '')
@@ -56,9 +55,9 @@ def showSortDirection(url):
     addDir(translation(30005), url.replace("?version=1", "?sort_order=3&version=1"), "listVideos", '')
     xbmcplugin.endOfDirectory(pluginhandle)
 
-def listVideosOwn(urlFull):
+def listVideosFilmByDate(urlFull):
     xbmcplugin.setContent(pluginhandle, "movies")
-    matches = fimstartsCore.getmatches(urlFull)
+    matches = fimstartsCore.getmatches(urlFull, True)
     for i in range(len(matches[0])): 
         addDir(matches[0][i], baseUrl + matches[1][i], "listTrailers", get_better_thumb(matches[2][i]))
 
@@ -69,6 +68,25 @@ def listVideosOwn(urlFull):
     addDir('<-- Woche zuvor (' + fimstartsCore.prev.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(True), "listVideosOwn", '')
 
     xbmcplugin.endOfDirectory(pluginhandle)
+
+
+def listVideosSeries(urlFull):
+    xbmcplugin.setContent(pluginhandle, "movies")
+    matches = fimstartsCore.getmatches(urlFull, False)
+    for i in range(len(matches[0])): 
+        addDir(matches[0][i], baseUrl + matches[1][i], "listTrailers", get_better_thumb(matches[2][i]))
+
+    if urlFull.find('?') != -1:
+        spl = urlFull.split('?page=')
+        siteNr = int(spl[1])
+        siteNr += 1
+        siteNr = str(siteNr)
+        urlFull = spl[0] + '?page=' + siteNr
+
+    addDir('Nächste Seite (' + siteNr + ')', urlFull, "listVideosSeries", '')
+
+    xbmcplugin.endOfDirectory(pluginhandle)
+
 
 def listVideos(urlFull):
     xbmcplugin.setContent(pluginhandle, "movies")
@@ -314,8 +332,10 @@ elif mode == "listTrailers":
     listTrailers(url, fanart)
 elif mode == "listVideos":
     listVideos(url)
-elif mode == "listVideosOwn":
-    listVideosOwn(url)
+elif mode == "listVideosFilmByDate":
+    listVideosFilmByDate(url)
+elif mode == "listVideosSeries":
+    listVideosSeries(url)
 elif mode == "search":
     search()
 else:

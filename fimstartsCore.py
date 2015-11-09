@@ -47,7 +47,7 @@ prev = datetime.datetime.now()
 next = datetime.datetime.now()
 
 
-def getmatches(url):
+def getmatches(url, filmByDateSite):
     global prev
     global next
 
@@ -55,15 +55,16 @@ def getmatches(url):
     if not site[0]:
         return site[1]
 
-    # findout the "current" donnerstag
-    a = site[0].split('calendar_picker\">\n')
-    b = a[1].split('breaker')
-    c = re.compile("(.+?) <a>", re.DOTALL).findall(b[0])[0]
-    day, month, year = (int(x) for x in c.split('.'))
-    current = datetime.date(year, month, day)
+    if filmByDateSite:
+        # findout the "current" donnerstag
+        a = site[0].split('calendar_picker\">\n')
+        b = a[1].split('breaker')
+        c = re.compile("(.+?) <a>", re.DOTALL).findall(b[0])[0]
+        day, month, year = (int(x) for x in c.split('.'))
+        current = datetime.date(year, month, day)
 
-    prev = current - datetime.timedelta(days=7)
-    next = current + datetime.timedelta(days=7)
+        prev = current - datetime.timedelta(days=7)
+        next = current + datetime.timedelta(days=7)
 
     data = []
     boxes = site[0].split('data_box">')
@@ -77,9 +78,12 @@ def getmatches(url):
     for box in data:
         titles.append(re.compile("alt='(.+?)'", re.DOTALL).findall(box)[0])
         info = str(re.compile("href=\"(.+?)\">", re.DOTALL).findall(box)[0])
-        info = info.replace('.html','/trailers')
+        if filmByDateSite:
+            info = info.replace('.html','/trailers')
+        else:
+            info = info.replace('.html','/videos')
         trailerUrls.append(info)
-        bilderUrls.append(re.compile("<img src='(.+?)'", re.DOTALL).findall(box)[0])
+        bilderUrls.append(re.compile("src='(.+?)'", re.DOTALL).findall(box)[0])
 
     return (titles,trailerUrls,bilderUrls)
 
@@ -105,38 +109,14 @@ def getUrlSuffixWeek(previous):
     return "?week=" + str(datum.year) + "-" + mon + "-" + day
 
 
-###Test
-#baseUrl = "http://www.filmstarts.de"
-#url = baseUrl + '/filme-vorschau/de/'
-###url = baseUrl + '/filme-vorschau/usa/'
+##Test
+#url = 'http://www.filmstarts.de/serien/beste/produktionsland-5002/?page=1'
+#film = False
 
-##url = 'http://www.filmstarts.de/filme-vorschau/de/?week=2015-10-29'
-
-#matches = getmatches(url)
-##for i in range(len(matches[0])): 
-##    ee = matches[0][i]
-##    ff = matches[1][i]
-##    gg = matches[2][i]
-    
-
-#urlm1 = getUrlSuffixWeek(True)
-##y = getUrlSuffixWeek(False)
-
-#bla = url + urlm1
-
-#if bla.find('?') != -1:
-#    bla = bla.split('?')[0]
-
-
-
-#matches = getmatches(url + urlm1)
-#urlm2 = getUrlSuffixWeek(True)
-
-#matches = getmatches(url + urlm2)
-#urlm3 = getUrlSuffixWeek(False)
-
-#matches = getmatches(url + urlm3)
-#urlm4 = getUrlSuffixWeek(True)
-
+#matches = getmatches(url, film)
+#for i in range(len(matches[0])): 
+#    ee = matches[0][i]
+#    ff = matches[1][i]
+#    gg = matches[2][i]
 
 #hh = 5
