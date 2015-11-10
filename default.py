@@ -34,7 +34,8 @@ maxCoverResolution = addon.getSetting("maxCoverResolution")
 baseUrl = "http://www.filmstarts.de"
 
 def index():
-    addDir('Trailer: '+translation(30008), '', "search", '')
+    addDir('Trailer: Film '+translation(30008), '', "search", '')
+    addDir('Trailer: Serien '+translation(30008), '', "searchSeries", '')
     addDir('Trailer: Neu', baseUrl + '/trailer/neu/', "listVideos", '')
     addDir('Trailer: Top', baseUrl + '/trailer/beliebteste.html', "listVideos", '')
     addDir('Trailer: Aktuell im Kino', baseUrl + '/trailer/imkino/', "listVideos", '')
@@ -176,13 +177,16 @@ def cleanTitle(title):
     return title
 
 
-def search():
+def search(searchSeries = False):
     xbmcplugin.setContent(pluginhandle, "movies")
     keyboard = xbmc.Keyboard('', str(translation(30008)))
     keyboard.doModal()
     if keyboard.isConfirmed() and keyboard.getText():
         search_string = keyboard.getText().replace(" ", "+")
-        content = getUrl(baseUrl + "/suche/1/?q="+search_string)
+        if (searchSeries):
+            content = getUrl(baseUrl + "/suche/6/?q="+search_string)
+        else:
+            content = getUrl(baseUrl + "/suche/1/?q="+search_string)
         spl = content.split('<tr><td style=" vertical-align:middle;">')
         for i in range(1, len(spl), 1):
             entry = spl[i]
@@ -192,7 +196,10 @@ def search():
             title = match[0].replace("<b>", "").replace("</b>", "")
             title = cleanTitle(title)
             match = re.compile("href='(.+?)'", re.DOTALL).findall(entry)
-            url = baseUrl + match[0].replace(".html", "/trailers/")
+            if (searchSeries):
+                url = baseUrl + match[0].replace(".html", "/videos/")
+            else:
+                url = baseUrl + match[0].replace(".html", "/trailers/")
             addDir(title, url, 'listTrailers', get_better_thumb(thumb))
         xbmcplugin.endOfDirectory(pluginhandle)
         if forceView:
@@ -338,5 +345,7 @@ elif mode == "listVideosSeries":
     listVideosSeries(url)
 elif mode == "search":
     search()
+elif mode == "searchSeries":
+    search(True)
 else:
     index()
