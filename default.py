@@ -65,8 +65,8 @@ def listVideosFilmByDate(urlFull):
     if urlFull.find('?') != -1:
         urlFull = urlFull.split('?')[0]
 
-    addDir('--> Woche danach (' + fimstartsCore.next.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(False), "listVideosOwn", '')
-    addDir('<-- Woche zuvor (' + fimstartsCore.prev.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(True), "listVideosOwn", '')
+    addDir('--> Woche danach (' + fimstartsCore.next.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(False), "listVideosFilmByDate", '')
+    addDir('<-- Woche zuvor (' + fimstartsCore.prev.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(True), "listVideosFilmByDate", '')
 
     xbmcplugin.endOfDirectory(pluginhandle)
 

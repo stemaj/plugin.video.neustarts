@@ -49,3 +49,5 @@
 - fixed TV-Series (best US)
 2.1.5.6
 - added search for TV-Series
+2.1.5.7
+- fixed "previous" and "next" week
