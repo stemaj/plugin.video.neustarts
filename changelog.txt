@@ -51,3 +51,5 @@
 - added search for TV-Series
 2.1.5.7
 - fixed "previous" and "next" week
+2.1.5.8
+- fixed umlaute, added quality option, deleted useless

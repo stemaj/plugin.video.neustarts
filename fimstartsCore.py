@@ -76,7 +76,8 @@ def getmatches(url, filmByDateSite):
     trailerUrls = []
     bilderUrls = []
     for box in data:
-        titles.append(re.compile("alt='(.+?)'", re.DOTALL).findall(box)[0])
+        title = re.compile(".html\">\n(.+?)\n</a>", re.DOTALL).findall(box)
+        titles.append(title[0])
         info = str(re.compile("href=\"(.+?)\">", re.DOTALL).findall(box)[0])
         if filmByDateSite:
             info = info.replace('.html','/trailers')
@@ -110,13 +111,28 @@ def getUrlSuffixWeek(previous):
 
 
 ##Test
-#url = 'http://www.filmstarts.de/serien/beste/produktionsland-5002/?page=1'
-#film = False
-
+#url = 'http://www.filmstarts.de/filme-vorschau/de/'
+#film = True
 #matches = getmatches(url, film)
 #for i in range(len(matches[0])): 
 #    ee = matches[0][i]
 #    ff = matches[1][i]
 #    gg = matches[2][i]
-
 #hh = 5
+
+#baseUrl = 'http://www.filmstarts.de'
+#url = 'http://www.filmstarts.de/kritiken/195350/trailer/19549723.html'
+#content = getUrl(url)[0]
+#quality = '\"html5PathHD\"'
+#match = re.compile(quality + ':"(.*?)"', re.DOTALL).findall(content)
+#finalUrl=match[0]
+#match = re.compile('"refmedia":(.+?),', re.DOTALL).findall(content)
+#media = match[0]
+#match = re.compile('"relatedEntityId":(.+?),', re.DOTALL).findall(content)
+#ref = match[0]
+#match = re.compile('"relatedEntityType":"(.+?)"', re.DOTALL).findall(content)
+#typeRef = match[0]
+#content = getUrl(baseUrl + '/ws/AcVisiondataV4.ashx?media='+media+'&ref='+ref+'&typeref='+typeRef)[0]
+#finalUrl = ""
+#match = re.compile('md_path="(.+?)"', re.DOTALL).findall(content)
+#finalUrl = match[0]

@@ -31,7 +31,9 @@ forceView = addon.getSetting("forceView") == "true"
 useCoverAsFanart = addon.getSetting("useCoverAsFanart") == "true"
 viewID = str(addon.getSetting("viewID"))
 maxCoverResolution = addon.getSetting("maxCoverResolution")
+videoquality = addon.getSetting("videoquality")
 baseUrl = "http://www.filmstarts.de"
+
 
 def index():
     addDir('Trailer: Film '+translation(30008), '', "search", '')
@@ -42,10 +44,6 @@ def index():
     addDir('Trailer: Demnächst im Kino', baseUrl + '/trailer/bald/', "listVideos", '')
     addDir('Trailer: Diese Woche: Deutschland', baseUrl + '/filme-vorschau/de/', "listVideosFilmByDate", '')
     addDir('Trailer: Diese Woche: USA', baseUrl + '/filme-vorschau/usa/', "listVideosFilmByDate", '')
-    addDir('Filmstarts: Fünf Sterne', baseUrl + '/videos/shows/funf-sterne', "listVideos", '')
-    addDir('Filmstarts: Interviews', baseUrl + '/trailer/interviews/', "listVideos", '')
-    addDir('Filmstarts: Fehlerteufel', baseUrl + '/videos/shows/filmstarts-fehlerteufel', "listVideos", '')
-    addDir('Meine Lieblings-Filmszene', baseUrl + '/videos/shows/meine-lieblings-filmszene', "listVideos", '')
     addDir('Trailer: Die besten amerikanischen Serien', baseUrl + '/serien/beste/produktionsland-5002/?page=1', "listVideosSeries", '')
     xbmcplugin.endOfDirectory(pluginhandle)
 
@@ -221,14 +219,19 @@ def playVideo(url):
         typeRef = match[0]
         content = getUrl(baseUrl + '/ws/AcVisiondataV4.ashx?media='+media+'&ref='+ref+'&typeref='+typeRef)
         finalUrl = ""
-        match = re.compile('hd_path="(.+?)"', re.DOTALL).findall(content)
+        if (int(videoquality) == 0):
+            qualityPath = 'ld_path'
+        elif (int(videoquality) == 1):
+            qualityPath = 'md_path'
+        else:
+            qualityPath = 'hd_path'
+        match = re.compile(qualityPath + '="(.+?)"', re.DOTALL).findall(content)
         finalUrl = match[0]
         if finalUrl.startswith("youtube:"):
             finalUrl = getYoutubeUrl(finalUrl.split(":")[1])
     if finalUrl:
         listitem = xbmcgui.ListItem(path=finalUrl)
         xbmcplugin.setResolvedUrl(pluginhandle, True, listitem)
-
 
 def queueVideo(url, name):
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
