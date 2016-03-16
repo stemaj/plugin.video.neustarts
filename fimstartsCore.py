@@ -136,3 +136,20 @@ def getUrlSuffixWeek(previous):
 #finalUrl = ""
 #match = re.compile('md_path="(.+?)"', re.DOTALL).findall(content)
 #finalUrl = match[0]
+
+#content = getUrl('http://www.filmstarts.de/kritiken/238194/trailers/')[0]
+#content = content[:content.find('<div class="social">')]
+#spl = content.split('<figure class="media-meta-fig">')
+#for i in range(1, len(spl), 1):
+#    entry = spl[i]
+#    match = re.compile('href="(.+?)"', re.DOTALL).findall(entry)
+#    if match:
+#        match = re.compile('"src":"(.+?)"', re.DOTALL).findall(entry)
+#        thumb = ""
+#        if match:
+#            thumb = match[0]
+#        match = re.compile('<span >.+?>(.+?)</span>', re.DOTALL).findall(entry)
+#        title = match[0].replace("<b>","").replace("</b>"," -").replace("</a>","").replace("<strong>","").replace("</strong>","")
+#        title = title.replace("\n","")
+#        title = title.replace(" DF", " - "+str(translation(30009))).replace(" OV", " - "+str(translation(30010)))
+#        title = cleanTitle(title)

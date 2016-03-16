@@ -159,8 +159,9 @@ def listTrailers(url, fanart):
             thumb = ""
             if match:
                 thumb = match[0]
-            match = re.compile('<span class="title fs14 ">.+?>(.+?)</span>', re.DOTALL).findall(entry)
+            match = re.compile('<span >.+?>(.+?)</span>', re.DOTALL).findall(entry)
             title = match[0].replace("<b>","").replace("</b>"," -").replace("</a>","").replace("<strong>","").replace("</strong>","")
+            title = title.replace("\n","")
             title = title.replace(" DF", " - "+str(translation(30009))).replace(" OV", " - "+str(translation(30010)))
             title = cleanTitle(title)
             addSmallThumbLink(title, url, 'playVideo', get_better_thumb(thumb), fanart)

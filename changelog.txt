@@ -53,3 +53,5 @@
 - fixed "previous" and "next" week
 2.1.5.8
 - fixed umlaute, added quality option, deleted useless
+2.1.5.9
+- Fix Title in listTrailers
