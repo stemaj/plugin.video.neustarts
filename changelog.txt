@@ -55,3 +55,5 @@
 - fixed umlaute, added quality option, deleted useless
 2.1.5.9
 - Fix Title in listTrailers
+2.1.5.10
+- Fix listTrailers if no trailer available
