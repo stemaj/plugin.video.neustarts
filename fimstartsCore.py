@@ -55,19 +55,40 @@ def getmatches(url, filmByDateSite):
     if not site[0]:
         return site[1]
 
+    boxesSplitter = 'data_box">'
+    titelSearch = ".html\">\n(.+?)\n</a>"
+    linkSearch = "href=\"(.+?)\">"
+    replaceStr = '.html'
+
     if filmByDateSite:
         # findout the "current" donnerstag
         a = site[0].split('calendar_picker\">\n')
-        b = a[1].split('breaker')
-        c = re.compile("(.+?) <a>", re.DOTALL).findall(b[0])[0]
-        day, month, year = (int(x) for x in c.split('.'))
-        current = datetime.date(year, month, day)
 
-        prev = current - datetime.timedelta(days=7)
+        if len(a) > 1:
+            b = a[1].split('breaker')
+            c = re.compile("(.+?) <a>", re.DOTALL).findall(b[0])[0]
+            day, month, year = (int(x) for x in c.split('.'))
+            current = datetime.date(year, month, day)
+            prev = current - datetime.timedelta(days=7)
+
+        else:
+            a = re.compile("week=(.+?)'>", re.DOTALL).findall(site[0])
+            year, month, day = (int(x) for x in a[0].split('-'))
+            prev = datetime.date(year, month, day)
+            current = prev + datetime.timedelta(days=7)
+
+            boxesSplitter = 'datablock vpadding10t'
+            titelSearch = "/dvd-bluray/'>\n(.+?)\n</a>"
+            linkSearch = "href=\'(.+?)\'>"
+            replaceStr = '/dvd-bluray/'
+
         next = current + datetime.timedelta(days=7)
 
+
     data = []
-    boxes = site[0].split('data_box">')
+
+
+    boxes = site[0].split(boxesSplitter)
     boxes.pop(0)
     for i in range(len(boxes)): 
         data.append(boxes[i].split('</h2>')[0])
@@ -76,13 +97,13 @@ def getmatches(url, filmByDateSite):
     trailerUrls = []
     bilderUrls = []
     for box in data:
-        title = re.compile(".html\">\n(.+?)\n</a>", re.DOTALL).findall(box)
+        title = re.compile(titelSearch, re.DOTALL).findall(box)
         titles.append(title[0])
-        info = str(re.compile("href=\"(.+?)\">", re.DOTALL).findall(box)[0])
+        info = str(re.compile(linkSearch, re.DOTALL).findall(box)[0])
         if filmByDateSite:
-            info = info.replace('.html','/trailers')
+            info = info.replace(replaceStr,'/trailers')
         else:
-            info = info.replace('.html','/videos')
+            info = info.replace(replaceStr,'/videos')
         trailerUrls.append(info)
         bilderUrls.append(re.compile("src='(.+?)'", re.DOTALL).findall(box)[0])
 
@@ -112,6 +133,7 @@ def getUrlSuffixWeek(previous):
 
 ##Test
 #url = 'http://www.filmstarts.de/filme-vorschau/de/'
+#url = 'http://www.filmstarts.de//dvd/vorschau/deutschland/'
 #film = True
 #matches = getmatches(url, film)
 #for i in range(len(matches[0])): 

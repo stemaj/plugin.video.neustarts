@@ -57,3 +57,5 @@
 - Fix Title in listTrailers
 2.1.5.10
 - Fix listTrailers if no trailer available
+2.1.5.11
+- Added dvd-bluray releases, added other series countrys
