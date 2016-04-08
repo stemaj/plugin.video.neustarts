@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.filmstarts_de" name="FilmStarts.de" version="2.1.5.11" provider-name="stemaj">
+<addon id="plugin.video.neustarts" name="Neustarts" version="3.0.0" provider-name="stemaj">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
@@ -8,10 +8,10 @@
     </extension>
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
-        <summary lang="de">Deutsche Trailer</summary>
-        <summary lang="en">German trailers</summary>
+        <summary lang="de">Deutsche Trailer von filmstarts.de</summary>
+        <summary lang="en">German trailers from filmstarts.de</summary>
         <language>de</language>
-        <description lang="de">Deutsche Trailer</description>
-        <description lang="en">German trailers</description>
+        <description lang="de">Deutsche Trailer von filmstarts.de</description>
+        <description lang="en">German trailers from filmstarts.de</description>
     </extension>
 </addon>

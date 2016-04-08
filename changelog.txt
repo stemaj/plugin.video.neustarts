@@ -59,3 +59,5 @@
 - Fix listTrailers if no trailer available
 2.1.5.11
 - Added dvd-bluray releases, added other series countrys
+3.0.0
+- renamed addon
