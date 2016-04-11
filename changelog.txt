@@ -61,3 +61,5 @@
 - Added dvd-bluray releases, added other series countrys
 3.0.0
 - renamed addon
+3.0.1
+- id fix

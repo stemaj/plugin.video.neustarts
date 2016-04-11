@@ -17,7 +17,7 @@ import fimstartsCore
 
 #addon = xbmcaddon.Addon()
 #addonID = addon.getAddonInfo('id')
-addonID = 'plugin.video.filmstarts_de'
+addonID = 'plugin.video.neustarts'
 addon = xbmcaddon.Addon(id=addonID)
 socket.setdefaulttimeout(30)
 pluginhandle = int(sys.argv[1])
