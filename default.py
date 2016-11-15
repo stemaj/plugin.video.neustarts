@@ -36,29 +36,29 @@ baseUrl = "http://www.filmstarts.de"
 
 
 def index():
-    addDir('FILME: '+translation(30008), '', "search", '')
-    addDir('Im Kino - Diese Woche: Deutschland', baseUrl + '/filme-vorschau/de/', "listVideosFilmByDate", '')
-    addDir('Im Kino - Diese Woche: USA', baseUrl + '/filme-vorschau/usa/', "listVideosFilmByDate", '')
-    addDir('Auf DVD - Diese Woche: Deutschland', baseUrl + '/dvd/vorschau/deutschland/', "listVideosFilmByDate", '')
-    addDir('SERIEN: '+translation(30008), '', "searchSeries", '')
-    addDir('Die besten amerikanischen Serien', baseUrl + '/serien/beste/produktionsland-5002/?page=1', "listVideosSeries", '')
-    addDir('Die besten britischen Serien', baseUrl + '/serien/beste/produktionsland-5004/?page=1', "listVideosSeries", '')
-    addDir('Die besten französischen Serien', baseUrl + '/serien/beste/produktionsland-5001/?page=1', "listVideosSeries", '')
-    addDir('Die besten australischen Serien', baseUrl + '/serien/beste/produktionsland-5029/?page=1', "listVideosSeries", '')
-    addDir('Die besten kanadischen Serien', baseUrl + '/serien/beste/produktionsland-5018/?page=1', "listVideosSeries", '')
+    addDir('FILME: '+translation(30008), '', "search")
+    addDir('Im Kino - Diese Woche: Deutschland', baseUrl + '/filme-vorschau/de/', "listVideosFilmByDate")
+    addDir('Im Kino - Diese Woche: USA', baseUrl + '/filme-vorschau/usa/', "listVideosFilmByDate")
+    addDir('Auf DVD - Diese Woche: Deutschland', baseUrl + '/dvd/vorschau/deutschland/', "listVideosFilmByDate")
+    addDir('SERIEN: '+translation(30008), '', "searchSeries")
+    addDir('Die besten amerikanischen Serien', baseUrl + '/serien/beste/produktionsland-5002/?page=1', "listVideosSeries")
+    addDir('Die besten britischen Serien', baseUrl + '/serien/beste/produktionsland-5004/?page=1', "listVideosSeries")
+    addDir('Die besten französischen Serien', baseUrl + '/serien/beste/produktionsland-5001/?page=1', "listVideosSeries")
+    addDir('Die besten australischen Serien', baseUrl + '/serien/beste/produktionsland-5029/?page=1', "listVideosSeries")
+    addDir('Die besten kanadischen Serien', baseUrl + '/serien/beste/produktionsland-5018/?page=1', "listVideosSeries")
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def listVideosFilmByDate(urlFull):
     xbmcplugin.setContent(pluginhandle, "movies")
     matches = fimstartsCore.getmatches(urlFull, True)
     for i in range(len(matches[0])): 
-        addDir(matches[0][i], baseUrl + matches[1][i], "listTrailers", get_better_thumb(matches[2][i]))
+        addDir(matches[0][i], baseUrl + matches[1][i], "listTrailers", get_better_thumb(matches[2][i]), matches[3][i], matches[4][i], matches[5][i], matches[6][i], matches[7][i] )
 
     if urlFull.find('?') != -1:
         urlFull = urlFull.split('?')[0]
 
-    addDir('--> Woche danach (' + fimstartsCore.next.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(False), "listVideosFilmByDate", '')
-    addDir('<-- Woche zuvor (' + fimstartsCore.prev.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(True), "listVideosFilmByDate", '')
+    addDir('--> Woche danach (' + fimstartsCore.next.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(False), "listVideosFilmByDate")
+    addDir('<-- Woche zuvor (' + fimstartsCore.prev.strftime("%d %b %Y") + ')', urlFull + fimstartsCore.getUrlSuffixWeek(True), "listVideosFilmByDate")
 
     xbmcplugin.endOfDirectory(pluginhandle)
 
@@ -67,7 +67,7 @@ def listVideosSeries(urlFull):
     xbmcplugin.setContent(pluginhandle, "movies")
     matches = fimstartsCore.getmatches(urlFull, False)
     for i in range(len(matches[0])): 
-        addDir(matches[0][i], baseUrl + matches[1][i], "listTrailers", get_better_thumb(matches[2][i]))
+        addDir(matches[0][i], baseUrl + matches[1][i], "listTrailers", get_better_thumb(matches[2][i]), matches[3][i], matches[4][i], matches[5][i], matches[6][i], matches[7][i] )
 
     if urlFull.find('?') != -1:
         spl = urlFull.split('?page=')
@@ -76,7 +76,7 @@ def listVideosSeries(urlFull):
         siteNr = str(siteNr)
         urlFull = spl[0] + '?page=' + siteNr
 
-    addDir('Nächste Seite (' + siteNr + ')', urlFull, "listVideosSeries", '')
+    addDir('Nächste Seite (' + siteNr + ')', urlFull, "listVideosSeries")
 
     xbmcplugin.endOfDirectory(pluginhandle)
 
@@ -229,22 +229,32 @@ def addSmallThumbLink(name, url, mode, iconimage, fanart=""):
     liz.setProperty('IsPlayable', 'true')
     if useCoverAsFanart:
         liz.setProperty("fanart_image", fanart)
+        liz.setArt("poster", iconimage)
+        liz.setArt("banner", iconimage)
+        liz.setThumbnailImage( iconimage)
     else:
         liz.setProperty("fanart_image", defaultFanart)
+        liz.setArt("poster", defaultFanart)
+        liz.setArt("banner", defaultFanart)
+        liz.setThumbnailImage( defaultFanart)
     liz.addContextMenuItems([(translation(30011), 'RunPlugin(plugin://'+addonID+'/?mode=queueVideo&url='+urllib.quote_plus(u)+'&name='+urllib.quote_plus(name)+')',)])
     ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz)
     return ok
 
 
-def addDir(name, url, mode, iconimage):
+def addDir(name, url, mode, iconimage = '', terminUndLaenge = '', director = '', cast = (), genre = '', beschreibung = ''):
     u = sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+urllib.quote_plus(mode)+"&fanart="+urllib.quote_plus(iconimage)
     ok = True
-    liz = xbmcgui.ListItem(name, iconImage=icon, thumbnailImage=iconimage)
-    liz.setInfo(type="Video", infoLabels={"Title": name})
+    liz = xbmcgui.ListItem(name, iconImage=icon, thumbnailImage=iconimage )
+    liz.setInfo(type="Video", infoLabels={"title": name, "tagline" : terminUndLaenge, "director": director, "cast" : cast, "genre" : genre, "plot" : beschreibung })
     if useCoverAsFanart and iconimage:
         liz.setProperty("fanart_image", iconimage)
+        liz.setArt({ 'poster': iconimage, 'banner' : iconimage })
+        liz.setThumbnailImage( iconimage)
     else:
         liz.setProperty("fanart_image", defaultFanart)
+        liz.setArt({ 'poster': defaultFanart, 'banner' : defaultFanart })
+        liz.setThumbnailImage( defaultFanart)
     ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz, isFolder=True)
     return ok
 

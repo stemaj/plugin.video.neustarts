@@ -86,16 +86,22 @@ def getmatches(url, filmByDateSite):
 
 
     data = []
-
+    data2 = []
 
     boxes = site[0].split(boxesSplitter)
     boxes.pop(0)
     for i in range(len(boxes)): 
         data.append(boxes[i].split('</h2>')[0])
+        data2.append(boxes[i].split('</h2>')[1])
 
     titles = []
     trailerUrls = []
     bilderUrls = []
+    startTerminLaenge = []
+    von = []
+    mit = []
+    genre = []
+    beschreibung = [] 
     for box in data:
         title = re.compile(titelSearch, re.DOTALL).findall(box)
         titles.append(title[0])
@@ -106,8 +112,50 @@ def getmatches(url, filmByDateSite):
             info = info.replace(replaceStr,'/videos')
         trailerUrls.append(info)
         bilderUrls.append(re.compile("src='(.+?)'", re.DOTALL).findall(box)[0])
+    for box in data2:
 
-    return (titles,trailerUrls,bilderUrls)
+        cnt = 0
+
+        boxx = box.split("</li>");
+
+        if filmByDateSite and len(boxx) > 3:
+
+            startTerminLaeng = re.compile("<div class=\"oflow_a\">\n(.+?)</div>", re.DOTALL).findall(boxx[cnt])[0]
+            startTerminLaenge.append(startTerminLaeng)
+            cnt = cnt+1
+
+            vonn = re.compile(" >(.+?)</a>", re.DOTALL).findall(boxx[cnt])
+            if len(vonn) == 0:
+                vonn = re.compile(" >(.+?)</span>", re.DOTALL).findall(boxx[cnt])
+            von.append(vonn[0])
+            cnt = cnt+1
+
+            tupp = re.compile(" >(.+?)</a>", re.DOTALL).findall(boxx[cnt])
+            if len(tupp) == 0:
+                tupp = re.compile(" >(.+?)</span>", re.DOTALL).findall(boxx[cnt])
+            tup = ()
+            for t in tupp:
+                tup = tup + (t,)
+            mit.append(tup)
+            if len(tup) > 0:
+                cnt = cnt+1
+
+            genr = re.compile("genre\">(.+?)</span>", re.DOTALL).findall(boxx[cnt])[0]
+            genre.append(genr)
+            cnt = cnt+1
+
+            beschr = re.compile("<p>\n(.+?)</p>", re.DOTALL).findall(boxx[cnt])[0]
+            beschreibung.append(beschr)
+
+        else:
+            startTerminLaenge.append('')
+            von.append('')
+            mit.append(())
+            genre.append('')
+            beschreibung.append('')
+
+
+    return (titles,trailerUrls,bilderUrls,startTerminLaenge,von,mit,genre,beschreibung)
 
 
 def getUrlSuffixWeek(previous):
@@ -134,12 +182,19 @@ def getUrlSuffixWeek(previous):
 ##Test
 #url = 'http://www.filmstarts.de/filme-vorschau/de/'
 #url = 'http://www.filmstarts.de//dvd/vorschau/deutschland/'
-#film = True
+#url = 'http://www.filmstarts.de/filme-vorschau/usa/'
+#url = 'http://www.filmstarts.de/serien/top/produktionsland-5002/'
+#film = False
 #matches = getmatches(url, film)
 #for i in range(len(matches[0])): 
-#    ee = matches[0][i]
-#    ff = matches[1][i]
-#    gg = matches[2][i]
+#    e = matches[0][i]
+#    f = matches[1][i]
+#    g = matches[2][i]
+#    h = matches[3][i]
+#    ii = matches[4][i]
+#    j = matches[5][i]
+#    k = matches[6][i]
+#    l = matches[7][i]
 #hh = 5
 
 #baseUrl = 'http://www.filmstarts.de'
