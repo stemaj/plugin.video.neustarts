@@ -65,3 +65,5 @@
 - id fix
 3.0.2
 - improvements due to estuary skin
+3.0.3
+- fixed argument error

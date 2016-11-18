@@ -229,13 +229,11 @@ def addSmallThumbLink(name, url, mode, iconimage, fanart=""):
     liz.setProperty('IsPlayable', 'true')
     if useCoverAsFanart:
         liz.setProperty("fanart_image", fanart)
-        liz.setArt("poster", iconimage)
-        liz.setArt("banner", iconimage)
+        liz.setArt({ 'poster': iconimage, 'banner' : iconimage })
         liz.setThumbnailImage( iconimage)
     else:
         liz.setProperty("fanart_image", defaultFanart)
-        liz.setArt("poster", defaultFanart)
-        liz.setArt("banner", defaultFanart)
+        liz.setArt({ 'poster': defaultFanart, 'banner' : defaultFanart })
         liz.setThumbnailImage( defaultFanart)
     liz.addContextMenuItems([(translation(30011), 'RunPlugin(plugin://'+addonID+'/?mode=queueVideo&url='+urllib.quote_plus(u)+'&name='+urllib.quote_plus(name)+')',)])
     ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz)
