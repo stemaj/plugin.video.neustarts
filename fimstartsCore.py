@@ -46,6 +46,58 @@ socket.setdefaulttimeout(5) # timeout in seconds
 prev = datetime.datetime.now()
 next = datetime.datetime.now()
 
+baseUrl = "http://www.filmstarts.de"
+
+def getVideoUrl(url, quality):
+
+    data = getUrl(url)
+    match = re.compile('de.vid.web.acsta.net(.+?).mp4', re.DOTALL).findall(data[0])
+    if len(match) == 0:
+        return
+
+    link = ""
+
+    for m in match:
+        m = m.replace("\/","/")
+        m = "http://de.vid.web.acsta.net" + m + ".mp4"
+        if len(link) == 0:
+            link = m
+        if quality == 0:
+            if "_ld_" in m:
+                link = m
+        elif quality == 1:
+            if "_sd_" in m or "_md_" in m:
+                link = m
+        else:
+            if "_hd_" in m:
+                link = m
+
+    return link
+
+
+def listTrailers(url):
+
+    data = getUrl(url)
+    if len(data) == 0:
+        return
+
+    splits = data[0].split('section class=\"section section-trailer')
+    splits = splits[1]
+    splits = splits.split('div class=\"rc-fb-widget')[0]
+    spl = splits.split('<div class=\"card card-video mdl row row-col-padded-10')
+    spl.pop(0)
+
+    urls = []
+    names = []
+    images = []
+    for i in range(len(spl)): 
+        match = re.compile('href="(.+?)"', re.DOTALL).findall(spl[i])
+        if match:
+            urls.append(baseUrl + match[0])
+            names.append(re.compile('alt="(.+?)"', re.DOTALL).findall(spl[i])[0])
+            images.append(re.compile('data-src="(.+?)"', re.DOTALL).findall(spl[i])[0])
+
+    return (names,urls,images)
 
 def getmatches(url, filmByDateSite):
     global prev
@@ -184,10 +236,11 @@ def getUrlSuffixWeek(previous):
 #url = 'http://www.filmstarts.de//dvd/vorschau/deutschland/'
 #url = 'http://www.filmstarts.de/filme-vorschau/usa/'
 #url = 'http://www.filmstarts.de/serien/top/produktionsland-5002/'
-#film = False
+#film = True
 #matches = getmatches(url, film)
-#for i in range(len(matches[0])): 
-#    e = matches[0][i]
+#for i in range(len(matches[0])):
+    #e = matches[0][i]
+    #f = listTrailers('http://www.filmstarts.de' + matches[1][i])
 #    f = matches[1][i]
 #    g = matches[2][i]
 #    h = matches[3][i]
@@ -195,7 +248,15 @@ def getUrlSuffixWeek(previous):
 #    j = matches[5][i]
 #    k = matches[6][i]
 #    l = matches[7][i]
-#hh = 5
+    #hh = 5
+
+#dat = getUrl("http://www.filmstarts.de/kritiken/243648/trailer/19557821.html")
+
+#videoUrl = getVideoUrl("http://www.filmstarts.de/kritiken/243648/trailer/19557821.html", 0)
+
+
+#hhh = 6
+
 
 #baseUrl = 'http://www.filmstarts.de'
 #url = 'http://www.filmstarts.de/kritiken/195350/trailer/19549723.html'
@@ -230,3 +291,16 @@ def getUrlSuffixWeek(previous):
 #        title = title.replace("\n","")
 #        title = title.replace(" DF", " - "+str(translation(30009))).replace(" OV", " - "+str(translation(30010)))
 #        title = cleanTitle(title)
+
+#urlFull = baseUrl + '/filme-vorschau/de/'
+#matches = getmatches(urlFull, True)
+#data = listTrailers(baseUrl + matches[1][0])
+#titles = data[0]
+#urls = data[1]
+#thumbs = data[2]
+#for i in range(len(titles)): 
+#    title = titles[i]
+#    url = urls[i]
+#    thumb = thumbs[i]
+
+#j = 6

@@ -80,29 +80,18 @@ def listVideosSeries(urlFull):
 
     xbmcplugin.endOfDirectory(pluginhandle)
 
-
-def listTrailers(url, fanart):
-    content = getUrl(url)
-    content = content[:content.find('<div class="social">')]
-    spl = content.split('<figure class="media-meta-fig">')
-    for i in range(1, len(spl), 1):
-        entry = spl[i]
-        match = re.compile('href="(.+?)"', re.DOTALL).findall(entry)
-        if match:
-            url = baseUrl + match[0]
-            match = re.compile('"src":"(.+?)"', re.DOTALL).findall(entry)
-            thumb = ""
-            if match:
-                thumb = match[0]
-            match = re.compile('<span >.+?>(.+?)</span>', re.DOTALL).findall(entry)
-            if (len(match) > 0):
-                title = match[0].replace("<b>","").replace("</b>"," -").replace("</a>","").replace("<strong>","").replace("</strong>","")
-                title = title.replace("\n","")
-                title = title.replace(" DF", " - "+str(translation(30009))).replace(" OV", " - "+str(translation(30010)))
-                title = cleanTitle(title)
-                addSmallThumbLink(title, url, 'playVideo', get_better_thumb(thumb), fanart)
+def listTrailers(urlFull, fanart):
+    content = getUrl(urlFull)
+    data = fimstartsCore.listTrailers(urlFull)
+    titles = data[0]
+    urls = data[1]
+    thumbs = data[2]
+    for i in range(len(titles)): 
+        title = str(titles[i])
+        url = str(urls[i])
+        thumb = str(thumbs[i])
+        addSmallThumbLink(title, url, 'playVideo', get_better_thumb(thumb), fanart)
     xbmcplugin.endOfDirectory(pluginhandle)
-
 
 def cleanTitle(title):
     title = title.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").replace("&#39;", "'").replace("&quot;", "\"").replace("&szlig;", "ß").replace("&ndash;", "-")
@@ -142,33 +131,10 @@ def search(searchSeries = False):
 
 
 def playVideo(url):
-    content = getUrl(url)
-    match = re.compile('"html5PathHD":"(.*?)"', re.DOTALL).findall(content)
-    finalUrl=""
-    if match[0] and match[0].startswith("http://"):
-        finalUrl=match[0]
-    else:
-        match = re.compile('"refmedia":(.+?),', re.DOTALL).findall(content)
-        media = match[0]
-        match = re.compile('"relatedEntityId":(.+?),', re.DOTALL).findall(content)
-        ref = match[0]
-        match = re.compile('"relatedEntityType":"(.+?)"', re.DOTALL).findall(content)
-        typeRef = match[0]
-        content = getUrl(baseUrl + '/ws/AcVisiondataV4.ashx?media='+media+'&ref='+ref+'&typeref='+typeRef)
-        finalUrl = ""
-        if (int(videoquality) == 0):
-            qualityPath = 'ld_path'
-        elif (int(videoquality) == 1):
-            qualityPath = 'md_path'
-        else:
-            qualityPath = 'hd_path'
-        match = re.compile(qualityPath + '="(.+?)"', re.DOTALL).findall(content)
-        finalUrl = match[0]
-        if finalUrl.startswith("youtube:"):
-            finalUrl = getYoutubeUrl(finalUrl.split(":")[1])
-    if finalUrl:
-        listitem = xbmcgui.ListItem(path=finalUrl)
-        xbmcplugin.setResolvedUrl(pluginhandle, True, listitem)
+
+    finalUrl = fimstartsCore.getVideoUrl(url, videoquality)
+    listitem = xbmcgui.ListItem(path=finalUrl)
+    xbmcplugin.setResolvedUrl(pluginhandle, True, listitem)
 
 def queueVideo(url, name):
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
@@ -185,10 +151,10 @@ def getYoutubeUrl(id):
 
 
 def get_better_thumb(thumb_url):
-    thumb_url = '/'.join([
-        p for p in thumb_url.split('/')
-        if not p[0:2] in ('r_', 'c_', 'cx', 'b_', 'o_')
-    ])
+    #thumb_url = '/'.join([
+    #    p for p in thumb_url.split('/')
+    #    if not p[0:2] in ('r_', 'c_', 'cx', 'b_', 'o_')
+    #])
     if maxCoverResolution == "0":
         thumb_url = thumb_url.replace("/medias/", "/r_300_400/medias/")
         thumb_url = thumb_url.replace("/videothumbnails", "")
