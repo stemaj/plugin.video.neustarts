@@ -52,7 +52,7 @@ def listVideosFilmByDate(urlFull):
     xbmcplugin.setContent(pluginhandle, "movies")
     matches = fimstartsCore.getmatches(urlFull, True)
     for i in range(len(matches[0])): 
-        addDir(matches[0][i], baseUrl + matches[1][i], "listTrailers", get_better_thumb(matches[2][i]), matches[3][i], matches[4][i], matches[5][i], matches[6][i], matches[7][i] )
+        addDir(matches[0][i], baseUrl + matches[1][i], "listTrailersMovies", get_better_thumb(matches[2][i]), matches[3][i], matches[4][i], matches[5][i], matches[6][i], matches[7][i] )
 
     if urlFull.find('?') != -1:
         urlFull = urlFull.split('?')[0]
@@ -83,14 +83,29 @@ def listVideosSeries(urlFull):
 def listTrailers(urlFull, fanart):
     content = getUrl(urlFull)
     data = fimstartsCore.listTrailers(urlFull)
-    titles = data[0]
-    urls = data[1]
-    thumbs = data[2]
-    for i in range(len(titles)): 
-        title = str(titles[i])
-        url = str(urls[i])
-        thumb = str(thumbs[i])
-        addSmallThumbLink(title, url, 'playVideo', get_better_thumb(thumb), fanart)
+    if data:
+        titles = data[0]
+        urls = data[1]
+        thumbs = data[2]
+        for i in range(len(titles)): 
+            title = str(titles[i])
+            url = str(urls[i])
+            thumb = str(thumbs[i])
+            addSmallThumbLink(title, url, 'playVideo', get_better_thumb(thumb), fanart)
+    xbmcplugin.endOfDirectory(pluginhandle)
+
+def listTrailersMovies(urlFull, fanart):
+    content = getUrl(urlFull)
+    data = fimstartsCore.listTrailersMovies(urlFull)
+    if data:
+        titles = data[0]
+        urls = data[1]
+        thumbs = data[2]
+        for i in range(len(titles)): 
+            title = str(titles[i])
+            url = str(urls[i])
+            thumb = str(thumbs[i])
+            addSmallThumbLink(title, url, 'playVideo', get_better_thumb(thumb), fanart)
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def cleanTitle(title):
@@ -122,13 +137,14 @@ def search(searchSeries = False):
             match = re.compile("href='(.+?)'", re.DOTALL).findall(entry)
             if (searchSeries):
                 url = baseUrl + match[0].replace(".html", "/videos/")
+                addDir(title, url, 'listTrailers', get_better_thumb(thumb))
             else:
                 url = baseUrl + match[0].replace(".html", "/trailers/")
-            addDir(title, url, 'listTrailers', get_better_thumb(thumb))
+                addDir(title, url, 'listTrailersMovies', get_better_thumb(thumb))
         xbmcplugin.endOfDirectory(pluginhandle)
         if forceView:
             xbmc.executebuiltin('Container.SetViewMode('+viewID+')')
-
+    xbmcplugin.endOfDirectory(pluginhandle)
 
 def playVideo(url):
 
@@ -234,6 +250,8 @@ elif mode == "queueVideo":
     queueVideo(url, name)
 elif mode == "listTrailers":
     listTrailers(url, fanart)
+elif mode == "listTrailersMovies":
+    listTrailersMovies(url, fanart)
 elif mode == "listVideosFilmByDate":
     listVideosFilmByDate(url)
 elif mode == "listVideosSeries":

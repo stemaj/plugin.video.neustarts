@@ -69,3 +69,5 @@
 - fixed argument error
 3.1.1
 - changes on filmstarts site
+3.1.2
+- fix films (series still not working)

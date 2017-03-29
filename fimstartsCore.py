@@ -11,6 +11,7 @@ def getUrl(url):
     error = ''
     link = ''
     req = urllib2.Request(url, headers={'accept': '*/*'})
+    #req.add_header('User-Agent', 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_2_1 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8G4 Safari/6533.18.5')
     req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:19.0) Gecko/20100101 Firefox/19.0')
     try:
         response = urllib2.urlopen(req)
@@ -81,23 +82,45 @@ def listTrailers(url):
     if len(data) == 0:
         return
 
-    splits = data[0].split('section class=\"section section-trailer')
-    splits = splits[1]
-    splits = splits.split('div class=\"rc-fb-widget')[0]
-    spl = splits.split('<div class=\"card card-video mdl row row-col-padded-10')
-    spl.pop(0)
-
+    entries = re.compile('article data-block="" class="media-meta small(.+?)</article>', re.DOTALL).findall(data[0])
     urls = []
     names = []
     images = []
-    for i in range(len(spl)): 
-        match = re.compile('href="(.+?)"', re.DOTALL).findall(spl[i])
-        if match:
-            urls.append(baseUrl + match[0])
-            names.append(re.compile('alt="(.+?)"', re.DOTALL).findall(spl[i])[0])
-            images.append(re.compile('data-src="(.+?)"', re.DOTALL).findall(spl[i])[0])
+    for i in range(len(entries)): 
+        urls.append(baseUrl + re.compile('a href=\"(.+?)\">', re.DOTALL).findall(entries[i])[0])
+        nameObj = re.compile('<a href(.+?)</span>', re.DOTALL).findall(entries[i])[0]
+        nameObj = re.compile('\">(.+?)</a>', re.DOTALL).findall(nameObj)[0]
+        nameObj = nameObj.replace("<strong>","");
+        nameObj = nameObj.replace("</strong>","");
+        nameObj = nameObj.replace("\n","");
+        names.append(nameObj)
+        images.append(re.compile('src\":\"(.+?)\"}', re.DOTALL).findall(entries[i])[0])
 
     return (names,urls,images)
+
+
+def listTrailersMovies(url):
+
+    data = getUrl(url)
+    if len(data) == 0:
+        return
+
+    data = data[0].split("er</h2></div>")
+    if len(data) < 2:
+        return
+    data = data[1]
+
+    entries = re.compile('<figure class=\"thumbnail col-xs-6 col-sm-12\">(.+?)div class=\"meta-sub light\"', re.DOTALL).findall(data)
+    urls = []
+    names = []
+    images = []
+    for i in range(len(entries)): 
+        urls.append(baseUrl + re.compile('meta-title-link\" href=\"(.+?)\" >', re.DOTALL).findall(entries[i])[0])
+        names.append(re.compile(' alt=\"(.+?)\" width=', re.DOTALL).findall(entries[i])[0])
+        images.append(re.compile('data-src=\"(.+?)\" alt', re.DOTALL).findall(entries[i])[0])
+
+    return (names,urls,images)
+
 
 def getmatches(url, filmByDateSite):
     global prev
@@ -232,75 +255,7 @@ def getUrlSuffixWeek(previous):
 
 
 ##Test
-#url = 'http://www.filmstarts.de/filme-vorschau/de/'
-#url = 'http://www.filmstarts.de//dvd/vorschau/deutschland/'
-#url = 'http://www.filmstarts.de/filme-vorschau/usa/'
-#url = 'http://www.filmstarts.de/serien/top/produktionsland-5002/'
-#film = True
-#matches = getmatches(url, film)
-#for i in range(len(matches[0])):
-    #e = matches[0][i]
-    #f = listTrailers('http://www.filmstarts.de' + matches[1][i])
-#    f = matches[1][i]
-#    g = matches[2][i]
-#    h = matches[3][i]
-#    ii = matches[4][i]
-#    j = matches[5][i]
-#    k = matches[6][i]
-#    l = matches[7][i]
-    #hh = 5
-
-#dat = getUrl("http://www.filmstarts.de/kritiken/243648/trailer/19557821.html")
-
-#videoUrl = getVideoUrl("http://www.filmstarts.de/kritiken/243648/trailer/19557821.html", 0)
-
-
+#url = 'http://www.filmstarts.de/serien/19156/videos/19558158/'
+#url = 'http://www.filmstarts.de/kritiken/228322/trailer/19558055.html'
+#videoUrl = getVideoUrl(url, 0)
 #hhh = 6
-
-
-#baseUrl = 'http://www.filmstarts.de'
-#url = 'http://www.filmstarts.de/kritiken/195350/trailer/19549723.html'
-#content = getUrl(url)[0]
-#quality = '\"html5PathHD\"'
-#match = re.compile(quality + ':"(.*?)"', re.DOTALL).findall(content)
-#finalUrl=match[0]
-#match = re.compile('"refmedia":(.+?),', re.DOTALL).findall(content)
-#media = match[0]
-#match = re.compile('"relatedEntityId":(.+?),', re.DOTALL).findall(content)
-#ref = match[0]
-#match = re.compile('"relatedEntityType":"(.+?)"', re.DOTALL).findall(content)
-#typeRef = match[0]
-#content = getUrl(baseUrl + '/ws/AcVisiondataV4.ashx?media='+media+'&ref='+ref+'&typeref='+typeRef)[0]
-#finalUrl = ""
-#match = re.compile('md_path="(.+?)"', re.DOTALL).findall(content)
-#finalUrl = match[0]
-
-#content = getUrl('http://www.filmstarts.de/kritiken/238194/trailers/')[0]
-#content = content[:content.find('<div class="social">')]
-#spl = content.split('<figure class="media-meta-fig">')
-#for i in range(1, len(spl), 1):
-#    entry = spl[i]
-#    match = re.compile('href="(.+?)"', re.DOTALL).findall(entry)
-#    if match:
-#        match = re.compile('"src":"(.+?)"', re.DOTALL).findall(entry)
-#        thumb = ""
-#        if match:
-#            thumb = match[0]
-#        match = re.compile('<span >.+?>(.+?)</span>', re.DOTALL).findall(entry)
-#        title = match[0].replace("<b>","").replace("</b>"," -").replace("</a>","").replace("<strong>","").replace("</strong>","")
-#        title = title.replace("\n","")
-#        title = title.replace(" DF", " - "+str(translation(30009))).replace(" OV", " - "+str(translation(30010)))
-#        title = cleanTitle(title)
-
-#urlFull = baseUrl + '/filme-vorschau/de/'
-#matches = getmatches(urlFull, True)
-#data = listTrailers(baseUrl + matches[1][0])
-#titles = data[0]
-#urls = data[1]
-#thumbs = data[2]
-#for i in range(len(titles)): 
-#    title = titles[i]
-#    url = urls[i]
-#    thumb = thumbs[i]
-
-#j = 6
