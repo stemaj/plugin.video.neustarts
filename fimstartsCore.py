@@ -54,26 +54,74 @@ def getVideoUrl(url, quality):
     data = getUrl(url)
     match = re.compile('de.vid.web.acsta.net(.+?).mp4', re.DOTALL).findall(data[0])
     if len(match) == 0:
+
+        #versuch über die frameUrl
+        match = re.compile('frameUrl\":\"(.+?)",', re.DOTALL).findall(data[0])
+        if len(match) == 0:
+            return
+        data = getUrl(match[0])
+        match = re.compile('de.vid.web.acsta.net(.+?).mp4', re.DOTALL).findall(data[0])
+    
+    if len(match) == 0:
         return
 
     link = ""
 
+    hasLow = False
+    hasMed = False
+    hasHigh = False
     for m in match:
-        m = m.replace("\/","/")
-        m = "http://de.vid.web.acsta.net" + m + ".mp4"
-        if len(link) == 0:
-            link = m
-        if quality == 0:
-            if "_ld_" in m:
-                link = m
-        elif quality == 1:
-            if "_sd_" in m or "_md_" in m:
-                link = m
-        else:
-            if "_hd_" in m:
-                link = m
+        if "_ld_" in m:
+            hasLow = True
+        if "_sd_" in m or "_md_" in m:
+            hasMed = True
+        if "_hd_" in m:
+            hasHigh = True
 
-    return link
+    returnLow = False
+    returnMed = False
+    returnHigh = False
+    if quality == 0:
+        if hasLow:
+            returnLow = True
+        elif hasMed:
+            returnMed = True
+        else:
+            returnHigh = True
+    elif quality == 1:
+        if hasMed:
+            returnMed = True
+        elif hasLow:
+            returnLow = True
+        else:
+            returnHigh = True
+    else:
+        if hasHigh:
+            returnHigh = True
+        elif hasMed:
+            returnMed = True
+        else:
+            returnLow = True
+
+
+    if returnLow:
+        for m in match:
+            if "_ld_" in m:
+                m = m.replace("\/","/")
+                m = "http://de.vid.web.acsta.net" + m + ".mp4"
+                return m
+    elif returnMed:
+        for m in match:
+            if "_sd_" in m or "_md_" in m:
+                m = m.replace("\/","/")
+                m = "http://de.vid.web.acsta.net" + m + ".mp4"
+                return m
+    else:
+        for m in match:
+            if "_hd_" in m:
+                m = m.replace("\/","/")
+                m = "http://de.vid.web.acsta.net" + m + ".mp4"
+                return m
 
 
 def listTrailers(url):
@@ -255,7 +303,7 @@ def getUrlSuffixWeek(previous):
 
 
 ##Test
-#url = 'http://www.filmstarts.de/serien/19156/videos/19558158/'
+#url = 'http://www.filmstarts.de/serien/19992/videos/19553238/'
 #url = 'http://www.filmstarts.de/kritiken/228322/trailer/19558055.html'
 #videoUrl = getVideoUrl(url, 0)
 #hhh = 6
