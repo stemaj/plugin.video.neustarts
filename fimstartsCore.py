@@ -158,12 +158,21 @@ def listTrailersMovies(url):
         return
     data = data[1]
 
-    entries = re.compile('<figure class=\"thumbnail col-xs-6 col-sm-12\">(.+?)div class=\"meta-sub light\"', re.DOTALL).findall(data)
+    data = data.split("aside class")
+    if len(data) < 2:
+        return
+    data = data[0]
+
+    entries = re.compile('card-video-col mdl(.+?)div class=\"meta-sub light\"', re.DOTALL).findall(data)
     urls = []
     names = []
     images = []
-    for i in range(len(entries)): 
-        urls.append(baseUrl + re.compile('meta-title-link\" href=\"(.+?)\" >', re.DOTALL).findall(entries[i])[0])
+    for i in range(len(entries)):
+        text = re.compile('meta-title-link\" href=\"(.+?)\" >', re.DOTALL).findall(entries[i])
+        if len(text) > 0:
+            urls.append(baseUrl + text[0])
+        else:
+            urls.append(baseUrl)
         names.append(re.compile(' alt=\"(.+?)\" width=', re.DOTALL).findall(entries[i])[0])
         images.append(re.compile('data-src=\"(.+?)\" alt', re.DOTALL).findall(entries[i])[0])
 
@@ -303,6 +312,8 @@ def getUrlSuffixWeek(previous):
 
 
 ##Test
+#url = 'http://www.filmstarts.de/kritiken/257832/trailers'
+#daten = listTrailersMovies(url)
 #url = 'http://www.filmstarts.de/serien/19992/videos/19553238/'
 #url = 'http://www.filmstarts.de/kritiken/228322/trailer/19558055.html'
 #videoUrl = getVideoUrl(url, 0)
