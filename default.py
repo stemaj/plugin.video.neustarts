@@ -81,7 +81,6 @@ def listVideosSeries(urlFull):
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def listTrailers(urlFull, fanart):
-    content = getUrl(urlFull)
     data = fimstartsCore.listTrailers(urlFull)
     if data:
         titles = data[0]
@@ -95,7 +94,6 @@ def listTrailers(urlFull, fanart):
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def listTrailersMovies(urlFull, fanart):
-    content = getUrl(urlFull)
     data = fimstartsCore.listTrailersMovies(urlFull)
     if data:
         titles = data[0]
@@ -123,9 +121,9 @@ def search(searchSeries = False):
     if keyboard.isConfirmed() and keyboard.getText():
         search_string = keyboard.getText().replace(" ", "+")
         if (searchSeries):
-            content = getUrl(baseUrl + "/suche/6/?q="+search_string)
+            content = getUrl(baseUrl + "/suche/?q="+search_string)
         else:
-            content = getUrl(baseUrl + "/suche/1/?q="+search_string)
+            content = getUrl(baseUrl + "/suche/?q="+search_string)
         spl = content.split('<tr><td style=" vertical-align:middle;">')
         for i in range(1, len(spl), 1):
             entry = spl[i]

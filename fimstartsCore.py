@@ -130,19 +130,19 @@ def listTrailers(url):
     if len(data) == 0:
         return
 
-    entries = re.compile('article data-block="" class="media-meta small(.+?)</article>', re.DOTALL).findall(data[0])
+    entries = re.compile('div class=\"card card-video card-video-col mdl-fixed(.+?)<div class=\"meta-sub light', re.DOTALL).findall(data[0])
     urls = []
     names = []
     images = []
-    for i in range(len(entries)): 
-        urls.append(baseUrl + re.compile('a href=\"(.+?)\">', re.DOTALL).findall(entries[i])[0])
-        nameObj = re.compile('<a href(.+?)</span>', re.DOTALL).findall(entries[i])[0]
-        nameObj = re.compile('\">(.+?)</a>', re.DOTALL).findall(nameObj)[0]
-        nameObj = nameObj.replace("<strong>","");
-        nameObj = nameObj.replace("</strong>","");
-        nameObj = nameObj.replace("\n","");
+    for i in range(len(entries)):
+        urlArr = re.compile('<a class=\"meta-title-link\" href=\"(.+?)\" >', re.DOTALL).findall(entries[i])
+        if (len(urlArr) > 0):
+            urls.append(baseUrl + urlArr[0])
+        else:
+            continue
+        nameObj = re.compile('alt=\"(.+?)\" width', re.DOTALL).findall(entries[i])[0]
         names.append(nameObj)
-        images.append(re.compile('src\":\"(.+?)\"}', re.DOTALL).findall(entries[i])[0])
+        images.append(re.compile('data-src=\"(.+?)\" alt', re.DOTALL).findall(entries[i])[0])
 
     return (names,urls,images)
 
@@ -314,6 +314,8 @@ def getUrlSuffixWeek(previous):
 ##Test
 #url = 'http://www.filmstarts.de/kritiken/257832/trailers'
 #daten = listTrailersMovies(url)
+#url = 'http://www.filmstarts.de/serien/9285/videos/'
+#daten = listTrailers(url)
 #url = 'http://www.filmstarts.de/serien/19992/videos/19553238/'
 #url = 'http://www.filmstarts.de/kritiken/228322/trailer/19558055.html'
 #videoUrl = getVideoUrl(url, 0)
