@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.neustarts" name="Neustarts" version="3.1.5" provider-name="stemaj">
+<addon id="plugin.video.neustarts" name="Neustarts" version="4.0.1" provider-name="stemaj">
     <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
+		<import addon="xbmc.python" version="2.25.0"/>
+        <import addon="script.module.routing" version="0.2.0"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>video</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Trailer zu den aktuellen Neustarts in Kino/DVD/Streaming</summary>
+        <description lang="en_GB"></description>
+        <language></language>
         <platform>all</platform>
-        <summary lang="de">Deutsche Trailer von filmstarts.de</summary>
-        <summary lang="en">German trailers from filmstarts.de</summary>
-        <language>de</language>
-        <description lang="de">Deutsche Trailer von filmstarts.de</description>
-        <description lang="en">German trailers from filmstarts.de</description>
+        <license>UNLICENSED</license>
+        <forum></forum>
+        <website></website>
+        <email>steffen.majaura@gmail.com</email>
+        <source></source>
+        <news></news>
+        <disclaimer></disclaimer>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
     </extension>
 </addon>
