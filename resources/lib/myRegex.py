@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import io
 import re
-from typing import NamedTuple
+#from typing import NamedTuple
 
 # class User():
 #     name: str
@@ -32,5 +32,5 @@ def parseToFilmList(result):
 
 
 def parseLink(result):
-    xxx = re.compile(b"contentURL\" content=\"(.+?)\" />").findall(result)
+    xxx = re.compile(b"og:video\" content=\"(.+?)\">").findall(result)
     return xxx[0]

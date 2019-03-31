@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 import urllib3
-import concurrent.futures
+#import concurrent.futures
 import datetime
 import re
 import io

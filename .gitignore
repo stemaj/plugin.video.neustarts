@@ -1,2 +1,3 @@
-fimstartsCore.pyo
-.vscode/launch.json
+*.pyo
+*.pyc
+.vscode/*
