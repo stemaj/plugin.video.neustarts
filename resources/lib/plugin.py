@@ -8,9 +8,8 @@ from resources.lib import kodilogging
 from xbmcgui import ListItem
 from xbmcplugin import addDirectoryItem, endOfDirectory, setResolvedUrl
 from xbmc import log
-import urllib3
-
-from resources.lib import simple
+from resources.lib import main
+from resources.lib import read
 
 
 ADDON = xbmcaddon.Addon()
@@ -33,37 +32,41 @@ def show_category(category_id):
     if category_id == "one":
         #plugin.handle, "", ListItem("Hello category %s!" % category_id))
         for x in range(0, 15):
-            date = simple.getThursday(True, x)
+            date = main.getThursday(True, x)
             addDirectoryItem(plugin.handle, plugin.url_for(
-                show_film_list, date), ListItem(date), True)
+                show_filmlist, date), ListItem(date), True)
         endOfDirectory(plugin.handle)
     if category_id == "two":
         for x in range(0, 15):
-            date = simple.getThursday(False, x)
+            date = main.getThursday(False, x)
             addDirectoryItem(plugin.handle, plugin.url_for(
-                show_film_list, date), ListItem(date), True)
+                show_filmlist, date), ListItem(date), True)
         endOfDirectory(plugin.handle)
 
 
-@plugin.route('/film_list/<category_id>')
-def show_film_list(category_id):
-    for x in simple.filmList(category_id):
-        addDirectoryItem(plugin.handle, plugin.url_for(
-                show_trailer, x.link.replace('/','_')), ListItem(x.film))
+@plugin.route('/filmlist/<filmlist_id>')
+def show_filmlist(filmlist_id):
+    data = read.load_url('https://m.moviepilot.de/kino/kinoprogramm/demnaechst-im-kino?start_date='+filmlist_id)
+    arr = main.listOfWeek(data)
+    for x in arr:
+        addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), ListItem(x.film), True)
     endOfDirectory(plugin.handle)
 
-@plugin.route('/trailer/<category_id>')
-def show_trailer(category_id):
-    urllib3.disable_warnings()
-    path = ""
-    listitem = ListItem(path=simple.trailerLink(category_id.replace('_','/')))
-    logger.log(0,path)
-    logger.log(1,path)
-    logger.log(2,path)
-    listitem.setInfo('video',infoLabels={ "Title": "title" , "Plot" : "plot" })
-    listitem.setProperty('IsPlayable', 'true')
-    setResolvedUrl(plugin.handle, True, listitem)
 
+@plugin.route('/trailerList/<trailerlist_id>')
+def show_trailerList(trailerlist_id):
+    data = read.load_url(trailerlist_id.replace('_','/'))
+    arr = main.listOfTrailers(data)
+    for x in arr:
+        log('##########LINK##############'+x.link)
+        data2 = read.load_url(x.link)
+        xxx = main.getTrailerLink(data2).decode('utf-8')
+        log('##########XXX##############'+xxx)
+        listitem = ListItem(path=xxx , label=x.film)
+        listitem.setInfo('video',infoLabels={ "Title": x.film })
+        listitem.setProperty('IsPlayable', 'true')
+        addDirectoryItem(plugin.handle, xxx, listitem)
+    endOfDirectory(plugin.handle)
 
 def run():
     plugin.run()
