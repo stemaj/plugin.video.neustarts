@@ -2,7 +2,7 @@ import io
 import urllib3
 
 def load_file(fileSuffix):
-    with io.open('file.'+fileSuffix, 'rb') as fo:
+    with io.open('tests/file.'+fileSuffix, 'rb') as fo:
         data = fo.read()
     return data
 
