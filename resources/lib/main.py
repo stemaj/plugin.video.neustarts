@@ -9,7 +9,7 @@ class Film():
         self.length = str4
         self.short = str5
         self.long = str6
-        self.pic = str7
+        self.poster = str7
 
 class Trailer():
   def __init__(self, str1, str2):
@@ -35,11 +35,11 @@ def listOfWeek(bytes):
   splits4 = splits3[:len(splits3)-1]
   filme1 = []
   for data in splits4:
-      filme1.append(re.compile("IN_3r\" data-reactid=\"[0-9]+\"><a href=\"(.+)\" class=\"_2lnW0\" title=\"(.+)\"\\s.+</a></s").findall(data)[0])
+      filme1.append(re.compile("CUBOJ.+href=\"(.+)\" .+2lnW0\" title=\"(.+)\" data.+2hm9z.+srcset=\"(.+) 2x").findall(data)[0])
   filme = []
   for x in range(0, len(filme1)):
     link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
-    filme.append(Film(filme1[x][1], link, '', '', '', '', ''))
+    filme.append(Film(filme1[x][1], link, '', '', '', '', filme1[x][2]))
   return filme
 
 def listOfTrailers(bytes):

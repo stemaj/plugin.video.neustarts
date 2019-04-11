@@ -83,3 +83,5 @@
 - rework
 4.0.6
 - dependencies
+4.0.7
+- posterart
