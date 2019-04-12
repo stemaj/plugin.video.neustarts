@@ -35,11 +35,20 @@ def listOfWeek(bytes):
   splits4 = splits3[1:len(splits3)]
   filme1 = []
   for data in splits4:
-      filme1.append(re.compile("CUBOJ.+href=\"(.+)\" class=\"_2lnW0\" title=\"(.+)\" .+2hm9z.+srcset=\"(.+) 2x.+_2Ie5A.+[0-9]\">(.+)</div><div class=\"p7P3N.+<p>(.+)</p>.+3FIJo").findall(data)[0])
+      comp = re.compile("CUBOJ.+href=\"(.+)\" class=\"_2lnW0\" title=\"(.+)\" .+2hm9z.+srcset=\"(.+) 2x.+_2Ie5A.+[0-9]\">(.+)</div><div class=\"p7P3N.+<p>(.+)</p>.+3FIJo").findall(data)
+      if len(comp) > 0:
+        filme1.append(comp[0])
+      else:
+        comp = re.compile("CUBOJ.+href=\"(.+)\" class=\"_2lnW0\" title=\"(.+)\" .+2hm9z").findall(data)
+        if len(comp) > 0:
+          filme1.append(comp[0])
   filme = []
   for x in range(0, len(filme1)):
     link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
-    filme.append(Film(filme1[x][1], link, '', '', filme1[x][3], filme1[x][4], filme1[x][2]))
+    if len(filme[x]) > 2:
+      filme.append(Film(filme1[x][1], link, '', '', filme1[x][3], filme1[x][4], filme1[x][2]))
+    else:
+      filme.append(Film(filme1[x][1], link, '', '', '', '', '')
   return filme
 
 def listOfTrailers(bytes):
