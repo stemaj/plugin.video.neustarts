@@ -45,10 +45,10 @@ def listOfWeek(bytes):
   filme = []
   for x in range(0, len(filme1)):
     link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
-    if len(filme[x]) > 2:
+    if len(filme1[x]) > 2:
       filme.append(Film(filme1[x][1], link, '', '', filme1[x][3], filme1[x][4], filme1[x][2]))
     else:
-      filme.append(Film(filme1[x][1], link, '', '', '', '', '')
+      filme.append(Film(filme1[x][1], link, '', '', '', '', ''))
   return filme
 
 def listOfTrailers(bytes):
