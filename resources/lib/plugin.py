@@ -51,6 +51,7 @@ def show_filmlist(filmlist_id):
     for x in arr:
         listItem = ListItem(x.film)
         listItem.setArt({'poster':x.poster})
+        listItem.setInfo('video',infoLabels={ 'plot': x.plot, 'plotoutline': x.plotoutline })
         addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
     endOfDirectory(plugin.handle)
 

@@ -85,3 +85,5 @@
 - dependencies
 4.0.7
 - posterart
+4.0.8
+- short and long info

@@ -7,8 +7,8 @@ class Film():
         self.link = str2
         self.genre = str3
         self.length = str4
-        self.short = str5
-        self.long = str6
+        self.plotoutline = str5
+        self.plot = str6
         self.poster = str7
 
 class Trailer():
@@ -31,15 +31,15 @@ def getThursday(next, number):
 def listOfWeek(bytes):
   split1 = bytes.decode('utf-8').split('trackingCategory')[1]
   split2 = split1.split('</main>')[0]
-  splits3 = split2.split('_2HBle')
-  splits4 = splits3[:len(splits3)-1]
+  splits3 = split2.split('_1rtC2')
+  splits4 = splits3[1:len(splits3)]
   filme1 = []
   for data in splits4:
-      filme1.append(re.compile("CUBOJ.+href=\"(.+)\" .+2lnW0\" title=\"(.+)\" data.+2hm9z.+srcset=\"(.+) 2x").findall(data)[0])
+      filme1.append(re.compile("CUBOJ.+href=\"(.+)\" class=\"_2lnW0\" title=\"(.+)\" .+2hm9z.+srcset=\"(.+) 2x.+_2Ie5A.+[0-9]\">(.+)</div><div class=\"p7P3N.+<p>(.+)</p>.+3FIJo").findall(data)[0])
   filme = []
   for x in range(0, len(filme1)):
     link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
-    filme.append(Film(filme1[x][1], link, '', '', '', '', filme1[x][2]))
+    filme.append(Film(filme1[x][1], link, '', '', filme1[x][3], filme1[x][4], filme1[x][2]))
   return filme
 
 def listOfTrailers(bytes):
