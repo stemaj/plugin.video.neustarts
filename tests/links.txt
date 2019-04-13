@@ -7,3 +7,10 @@ https://m.moviepilot.de/movies/shazam--2/trailer
 file.002
 https://www.moviepilot.de/movies/shazam--2/trailer/115774
 
+file.003
+https://m.moviepilot.de/suche?q=cold%20war&type=movie
+
+file.004
+https://m.moviepilot.de/suche?q=orphan%20black&type=series
+
+https://www.moviepilot.de/dvd/dvds-neu?start_date=2019-04-08
