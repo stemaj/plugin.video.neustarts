@@ -13,4 +13,12 @@ https://m.moviepilot.de/suche?q=cold%20war&type=movie
 file.004
 https://m.moviepilot.de/suche?q=orphan%20black&type=series
 
+file.005
+https://m.moviepilot.de/filme/neuesten/online-netflix
+
+file.006
+https://m.moviepilot.de/filme/neuesten/online-amazon-prime
+
+
 https://www.moviepilot.de/dvd/dvds-neu?start_date=2019-04-08
+https://m.moviepilot.de/serien/neuesten/online-amazon-prime
