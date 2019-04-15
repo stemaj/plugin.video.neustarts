@@ -7,7 +7,7 @@ from resources.lib import kodiutils
 from resources.lib import kodilogging
 from xbmcgui import ListItem
 from xbmcplugin import addDirectoryItem, endOfDirectory, setResolvedUrl
-from xbmc import log
+from xbmc import log, Keyboard
 from resources.lib import main
 from resources.lib import read
 
@@ -24,6 +24,10 @@ def index():
         show_category, "one"), ListItem("Filme kommend nach Startdatum"), True)
     addDirectoryItem(plugin.handle, plugin.url_for(
         show_category, "two"), ListItem("Filme bisher nach Startdatum"), True)
+    addDirectoryItem(plugin.handle, plugin.url_for(
+        show_category, "three"), ListItem("Filme Suche"), True)
+    addDirectoryItem(plugin.handle, plugin.url_for(
+        show_category, "four"), ListItem("Serien Suche"), True)
     endOfDirectory(plugin.handle)
 
 
@@ -41,6 +45,12 @@ def show_category(category_id):
             date = main.getThursday(False, x)
             addDirectoryItem(plugin.handle, plugin.url_for(
                 show_filmlist, date), ListItem(date), True)
+        endOfDirectory(plugin.handle)
+    if category_id == "three":
+        keyb = Keyboard()
+        keyb.doModal()
+        if keyb.isConfirmed():
+            inp = keyb.getText()
         endOfDirectory(plugin.handle)
 
 
