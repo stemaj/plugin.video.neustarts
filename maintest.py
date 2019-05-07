@@ -45,6 +45,17 @@ class Test_ParseFiles(unittest.TestCase):
     link = main.getTrailerLink(a)
     self.assertEqual(b'https://cdnapisec.kaltura.com/p/1764171/sp/176417100/playManifest/entryId/1_h31zhkyy/format/url/protocol/https/flavorParamId/0', link)
 
+  
+  def test_file003(self):
+    a = read.load_file('003')
+    arr = main.listOfMovieSearch(a)
+    self.assertEqual(6, len(arr))
+    self.assertEqual('Cold War', arr[0].film)
+    self.assertEqual('http://m.moviepilot.de/movies/cold-war/trailer', arr[0].link)
+    self.assertEqual('Cold Warriors', arr[5].film)
+    self.assertEqual('http://m.moviepilot.de/movies/cold-warriors/trailer', arr[5].link)
+
+
 
 if __name__ == '__main__':
     unittest.main()

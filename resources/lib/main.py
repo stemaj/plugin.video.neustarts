@@ -51,6 +51,22 @@ def listOfWeek(bytes):
       filme.append(Film(filme1[x][1], link, '', '', '', '', ''))
   return filme
 
+def listOfMovieSearch(bytes):
+  split1 = bytes.decode('utf-8').split('<!--{"results":')[1]
+  split2 = split1.split('<div class=\'grid--row\'>\'')[0]
+  splits3 = split2.split('Movie')
+  splits4 = splits3[1:len(splits3)-1]
+  filme1 = []
+  for data in splits4:
+    comp = re.compile("title\":\"(.+)\",\"dis.+path\":\"(.+)\".\"meta").findall(data)
+    if len(comp) > 0:
+          filme1.append(comp[0])
+  filme = []
+  for x in range(0, len(filme1)):
+    link = 'http://m.moviepilot.de' + filme1[x][1] + '/trailer'
+    filme.append(Film(filme1[x][0], link, '', '', '', '', ''))
+  return filme
+
 def listOfTrailers(bytes):
   split1 = bytes.decode('utf-8').split('video--lightbox--playlists-wrapper')[1]
   split2 = split1.split('Top-Videos')[0]
