@@ -51,6 +51,13 @@ def show_category(category_id):
         keyb.doModal()
         if keyb.isConfirmed():
             inp = keyb.getText()
+            data = read.load_url('https://m.moviepilot.de/suche?q=' + inp + '&type=movie')
+            arr = main.listOfMovieSearch(data)
+            for x in arr:
+                listItem = ListItem(x.film)
+                listItem.setArt({'poster':x.poster})
+                listItem.setInfo('video',infoLabels={ 'plot': x.plot, 'plotoutline': x.plotoutline })
+                addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
         endOfDirectory(plugin.handle)
 
 
