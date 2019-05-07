@@ -7,7 +7,7 @@ def load_file(fileSuffix):
     return data
 
 def load_url(url):
-    http = urllib3.PoolManager()
+    http = urllib3.PoolManager(maxsize=10, cert_reqs='CERT_NONE')
     r = http.request('GET', url)
     if (r.status == 200):
         return r.data
