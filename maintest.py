@@ -64,6 +64,12 @@ class Test_ParseFiles(unittest.TestCase):
     self.assertEqual('http://m.moviepilot.de/serie/orphan-black/trailer', arr[0].link)
     self.assertEqual('Orphan Black - 7 Genes', arr[1].film)
     self.assertEqual('http://m.moviepilot.de/serie/orphan-black-7-genes/trailer', arr[1].link)
+    
+
+  def test_file005(self):
+    a = read.load_file('005')
+    arr = main.listOfStreaming(a)
+    self.assertEqual(25, len(arr))
 
 
 if __name__ == '__main__':
