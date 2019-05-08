@@ -87,3 +87,5 @@
 - posterart
 4.0.8
 - short and long info
+4.0.9
+- Search, DVD and Streaming
