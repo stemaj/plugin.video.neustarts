@@ -28,6 +28,18 @@ def getThursday(next, number):
             d -= datetime.timedelta(1)
         return str(d)
 
+def getMonday(next, number):
+    if next:
+        d = datetime.date.today() + datetime.timedelta(7)*number
+        while d.weekday() != 0:
+            d += datetime.timedelta(1)
+        return str(d)
+    else:
+        d = datetime.date.today() - datetime.timedelta(7)*number
+        while d.weekday() != 0:
+            d -= datetime.timedelta(1)
+        return str(d)
+
 def listOfWeek(bytes):
   split1 = bytes.decode('utf-8').split('trackingCategory')[1]
   split2 = split1.split('</main>')[0]

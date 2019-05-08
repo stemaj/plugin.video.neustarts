@@ -25,6 +25,10 @@ def index():
     addDirectoryItem(plugin.handle, plugin.url_for(
         show_category, "two"), ListItem("Filme bisher nach Startdatum"), True)
     addDirectoryItem(plugin.handle, plugin.url_for(
+        show_category, "one1"), ListItem("DVDs kommend nach Startdatum"), True)
+    addDirectoryItem(plugin.handle, plugin.url_for(
+        show_category, "two1"), ListItem("DVDs bisher nach Startdatum"), True)
+    addDirectoryItem(plugin.handle, plugin.url_for(
         show_category, "three"), ListItem("Filme Suche"), True)
     addDirectoryItem(plugin.handle, plugin.url_for(
         show_category, "four"), ListItem("Serien Suche"), True)
@@ -34,17 +38,28 @@ def index():
 @plugin.route('/category/<category_id>')
 def show_category(category_id):
     if category_id == "one":
-        #plugin.handle, "", ListItem("Hello category %s!" % category_id))
         for x in range(0, 15):
             date = main.getThursday(True, x)
             addDirectoryItem(plugin.handle, plugin.url_for(
-                show_filmlist, date), ListItem(date), True)
+                show_filmlist, date, False), ListItem(date), True)
         endOfDirectory(plugin.handle)
     if category_id == "two":
         for x in range(0, 15):
             date = main.getThursday(False, x)
             addDirectoryItem(plugin.handle, plugin.url_for(
-                show_filmlist, date), ListItem(date), True)
+                show_filmlist, date, False), ListItem(date), True)
+        endOfDirectory(plugin.handle)
+    if category_id == "one1":
+        for x in range(0, 15):
+            date = main.getMonday(True, x)
+            addDirectoryItem(plugin.handle, plugin.url_for(
+                show_filmlist, date, True), ListItem(date), True)
+        endOfDirectory(plugin.handle)
+    if category_id == "two1":
+        for x in range(0, 15):
+            date = main.getMonday(False, x)
+            addDirectoryItem(plugin.handle, plugin.url_for(
+                show_filmlist, date, True), ListItem(date), True)
         endOfDirectory(plugin.handle)
     if category_id == "three":
         keyb = Keyboard()
@@ -75,8 +90,11 @@ def show_category(category_id):
 
 
 @plugin.route('/filmlist/<filmlist_id>')
-def show_filmlist(filmlist_id):
-    data = read.load_url('https://m.moviepilot.de/kino/kinoprogramm/demnaechst-im-kino?start_date='+filmlist_id)
+def show_filmlist(filmlist_id, isDvd):
+    if isDvd:
+        data = read.load_url('https://m.moviepilot.de/dvd/dvds-neu?start_date='+filmlist_id)
+    else:
+        data = read.load_url('https://m.moviepilot.de/kino/kinoprogramm/demnaechst-im-kino?start_date='+filmlist_id)
     arr = main.listOfWeek(data)
     for x in arr:
         listItem = ListItem(x.film)
