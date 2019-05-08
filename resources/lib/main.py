@@ -85,14 +85,17 @@ def listOfStreaming(bytes):
   splits3 = split2.split('itemprop=\"url\"')
   splits4 = splits3[1:len(splits3)]
   filme1 = []
+  filme2 = []
   for data in splits4:
-    comp = re.compile("'href=\"(.+)\"><link.+itemprop=\\'name\\'>(.+)<.+</h3>").findall(data)
-    if len(comp) > 0:
-          filme1.append(comp[0])
+    compLink = re.compile("href=\"(.+)\"><link").findall(data)
+    compName = re.compile(">(.+)</strong>\\n</h3>").findall(data)
+    if len(compLink) > 0 and len(compName) > 0:
+          filme1.append(compLink)
+          filme2.append(compName)
   filme = []
   for x in range(0, len(filme1)):
     link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
-    filme.append(Film(filme1[x][1], link, '', '', '', '', ''))
+    filme.append(Film(filme2[x][0], link, '', '', '', '', ''))
   return filme
 
 def listOfTrailers(bytes):
