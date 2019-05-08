@@ -48,13 +48,22 @@ class Test_ParseFiles(unittest.TestCase):
   
   def test_file003(self):
     a = read.load_file('003')
-    arr = main.listOfMovieSearch(a)
+    arr = main.listOfSearch(a)
     self.assertEqual(6, len(arr))
     self.assertEqual('Cold War', arr[0].film)
     self.assertEqual('http://m.moviepilot.de/movies/cold-war/trailer', arr[0].link)
     self.assertEqual('Cold Warriors', arr[5].film)
     self.assertEqual('http://m.moviepilot.de/movies/cold-warriors/trailer', arr[5].link)
 
+  
+  def test_file004(self):
+    a = read.load_file('004')
+    arr = main.listOfSearch(a)
+    self.assertEqual(2, len(arr))
+    self.assertEqual('Orphan Black', arr[0].film)
+    self.assertEqual('http://m.moviepilot.de/serie/orphan-black/trailer', arr[0].link)
+    self.assertEqual('Orphan Black - 7 Genes', arr[1].film)
+    self.assertEqual('http://m.moviepilot.de/serie/orphan-black-7-genes/trailer', arr[1].link)
 
 
 if __name__ == '__main__':

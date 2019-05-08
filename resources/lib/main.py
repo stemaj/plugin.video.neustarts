@@ -51,11 +51,11 @@ def listOfWeek(bytes):
       filme.append(Film(filme1[x][1], link, '', '', '', '', ''))
   return filme
 
-def listOfMovieSearch(bytes):
+def listOfSearch(bytes):
   split1 = bytes.decode('utf-8').split('<!--{"results":')[1]
   split2 = split1.split('<div class=\'grid--row\'>\'')[0]
-  splits3 = split2.split('Movie')
-  splits4 = splits3[1:len(splits3)-1]
+  splits3 = split2.split('itemClass')
+  splits4 = splits3[1:len(splits3)]
   filme1 = []
   for data in splits4:
     comp = re.compile("title\":\"(.+)\",\"dis.+path\":\"(.+)\".\"meta").findall(data)

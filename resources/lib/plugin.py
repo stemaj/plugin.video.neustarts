@@ -52,7 +52,20 @@ def show_category(category_id):
         if keyb.isConfirmed():
             inp = keyb.getText()
             data = read.load_url('https://m.moviepilot.de/suche?q=' + inp + '&type=movie')
-            arr = main.listOfMovieSearch(data)
+            arr = main.listOfSearch(data)
+            for x in arr:
+                listItem = ListItem(x.film)
+                listItem.setArt({'poster':x.poster})
+                listItem.setInfo('video',infoLabels={ 'plot': x.plot, 'plotoutline': x.plotoutline })
+                addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
+        endOfDirectory(plugin.handle)
+    if category_id == "four":
+        keyb = Keyboard()
+        keyb.doModal()
+        if keyb.isConfirmed():
+            inp = keyb.getText()
+            data = read.load_url('https://m.moviepilot.de/suche?q=' + inp + '&type=series')
+            arr = main.listOfSearch(data)
             for x in arr:
                 listItem = ListItem(x.film)
                 listItem.setArt({'poster':x.poster})
