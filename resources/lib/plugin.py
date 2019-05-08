@@ -32,6 +32,8 @@ def index():
         show_category, "three"), ListItem("Filme Suche"), True)
     addDirectoryItem(plugin.handle, plugin.url_for(
         show_category, "four"), ListItem("Serien Suche"), True)
+    addDirectoryItem(plugin.handle, plugin.url_for(
+        show_category, "five"), ListItem("Filme neu auf Netflix"), True)
     endOfDirectory(plugin.handle)
 
 
@@ -87,9 +89,17 @@ def show_category(category_id):
                 listItem.setInfo('video',infoLabels={ 'plot': x.plot, 'plotoutline': x.plotoutline })
                 addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
         endOfDirectory(plugin.handle)
+    if category_id == "five":
+        data = read.load_url('https://m.moviepilot.de/filme/neuesten/online-netflix')
+        arr = main.listOfStreaming(data)
+        for x in arr:
+            listItem = ListItem(x.film)
+            listItem.setArt({'poster':x.poster})
+            listItem.setInfo('video',infoLabels={ 'plot': x.plot, 'plotoutline': x.plotoutline })
+            addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
+        endOfDirectory(plugin.handle)
 
-
-@plugin.route('/filmlist/<filmlist_id>')
+@plugin.route('/filmlist/<filmlist_id>/<isDvd>')
 def show_filmlist(filmlist_id, isDvd):
     if isDvd:
         data = read.load_url('https://m.moviepilot.de/dvd/dvds-neu?start_date='+filmlist_id)
