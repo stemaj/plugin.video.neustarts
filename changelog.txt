@@ -89,3 +89,5 @@
 - short and long info
 4.0.9
 - Search, DVD and Streaming
+4.0.10
+- boolean fix

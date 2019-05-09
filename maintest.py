@@ -70,6 +70,15 @@ class Test_ParseFiles(unittest.TestCase):
     a = read.load_file('005')
     arr = main.listOfStreaming(a)
     self.assertEqual(25, len(arr))
+    self.assertEqual('Suzzanna: Buried Alive', arr[3].film)
+    self.assertEqual('http://m.moviepilot.de/movies/suzzanna-buried-alive/trailer', arr[3].link)
+    #self.assertEqual('https://assets.cdn.moviepilot.de/files/0a5e6200edf486a652392820ac4c4e53a7a1cfdd797ea280a4d0352fde43/limit/70/100/suzzanna-buried-alive.jpg', arr[3].poster)
+
+
+  def test_file007(self):
+    a = read.load_file('007')
+    arr = main.listOfTrailers(a)
+    self.assertEqual(12, len(arr))
 
 
 if __name__ == '__main__':

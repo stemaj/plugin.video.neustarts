@@ -79,6 +79,10 @@ def listOfSearch(bytes):
     filme.append(Film(filme1[x][0], link, '', '', '', '', ''))
   return filme
 
+
+
+
+
 def listOfStreaming(bytes):
   split1 = bytes.decode('utf-8').split('archive-content')[1]
   split2 = split1.split('clearfix js--pagination')[0]
@@ -86,21 +90,27 @@ def listOfStreaming(bytes):
   splits4 = splits3[1:len(splits3)]
   filme1 = []
   filme2 = []
+  #filme3 = []
   for data in splits4:
     compLink = re.compile("href=\"(.+)\"><link").findall(data)
+    #compPic = re.compile("link\shref=(.+)\sitem.+poster--p").findall(data)
     compName = re.compile(">(.+)</strong>\\n</h3>").findall(data)
-    if len(compLink) > 0 and len(compName) > 0:
+    if len(compLink) > 0 and len(compName) > 0:# and len(compPic) > 0:
           filme1.append(compLink)
           filme2.append(compName)
+          #filme3.append(compPic)
   filme = []
   for x in range(0, len(filme1)):
     link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
-    filme.append(Film(filme2[x][0], link, '', '', '', '', ''))
+    filme.append(Film(filme2[x][0], link, '', '', '', '', ''))#filme3[x][0]))
   return filme
 
 def listOfTrailers(bytes):
   split1 = bytes.decode('utf-8').split('video--lightbox--playlists-wrapper')[1]
-  split2 = split1.split('Top-Videos')[0]
+  if ('Top Serien-Videos' not in split1):
+    split2 = split1.split('Top-Videos')[0]
+  else:
+    split2 = split1.split('Top Serien-Videos')[0]
   splits3 = split2.split('</li>')
   splits4 = splits3[:len(splits3)-1]
   trailer1 = []
