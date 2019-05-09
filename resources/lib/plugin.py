@@ -134,7 +134,7 @@ def show_category(category_id):
 
 @plugin.route('/filmlist/<filmlist_id>/<isDvd>')
 def show_filmlist(filmlist_id, isDvd):
-    if isDvd:
+    if isDvd == True:
         data = read.load_url('https://m.moviepilot.de/dvd/dvds-neu?start_date='+filmlist_id)
     else:
         data = read.load_url('https://m.moviepilot.de/kino/kinoprogramm/demnaechst-im-kino?start_date='+filmlist_id)

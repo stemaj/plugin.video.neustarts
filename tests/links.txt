@@ -19,6 +19,10 @@ https://m.moviepilot.de/filme/neuesten/online-netflix
 file.006
 https://m.moviepilot.de/filme/neuesten/online-amazon-prime
 
+file.007 - 8 trailer, 2 specails, 2 sonstige
+https://m.moviepilot.de/serie/orphan-black/trailer
+
+
 
 https://www.moviepilot.de/dvd/dvds-neu?start_date=2019-04-08
 https://m.moviepilot.de/serien/neuesten/online-amazon-prime
