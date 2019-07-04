@@ -91,3 +91,5 @@
 - Search, DVD and Streaming
 4.0.10
 - boolean fix
+4.0.11
+- dvd fix

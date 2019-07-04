@@ -49,25 +49,25 @@ def show_category(category_id):
         for x in range(0, 15):
             date = main.getThursday(True, x)
             addDirectoryItem(plugin.handle, plugin.url_for(
-                show_filmlist, date, False), ListItem(date), True)
+                show_filmlist, date), ListItem(date), True)
         endOfDirectory(plugin.handle)
     if category_id == "two":
         for x in range(0, 15):
             date = main.getThursday(False, x)
             addDirectoryItem(plugin.handle, plugin.url_for(
-                show_filmlist, date, False), ListItem(date), True)
+                show_filmlist, date), ListItem(date), True)
         endOfDirectory(plugin.handle)
     if category_id == "one1":
         for x in range(0, 15):
             date = main.getMonday(True, x)
             addDirectoryItem(plugin.handle, plugin.url_for(
-                show_filmlist, date, True), ListItem(date), True)
+                show_dvdlist, date), ListItem(date), True)
         endOfDirectory(plugin.handle)
     if category_id == "two1":
         for x in range(0, 15):
             date = main.getMonday(False, x)
             addDirectoryItem(plugin.handle, plugin.url_for(
-                show_filmlist, date, True), ListItem(date), True)
+                show_dvdlist, date), ListItem(date), True)
         endOfDirectory(plugin.handle)
     if category_id == "three":
         keyb = Keyboard()
@@ -132,12 +132,9 @@ def show_category(category_id):
             addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
         endOfDirectory(plugin.handle)
 
-@plugin.route('/filmlist/<filmlist_id>/<isDvd>')
-def show_filmlist(filmlist_id, isDvd):
-    if isDvd == True:
-        data = read.load_url('https://m.moviepilot.de/dvd/dvds-neu?start_date='+filmlist_id)
-    else:
-        data = read.load_url('https://m.moviepilot.de/kino/kinoprogramm/demnaechst-im-kino?start_date='+filmlist_id)
+@plugin.route('/filmlist/<filmlist_id>')
+def show_filmlist(filmlist_id):
+    data = read.load_url('https://m.moviepilot.de/kino/kinoprogramm/demnaechst-im-kino?start_date='+filmlist_id)
     arr = main.listOfWeek(data)
     for x in arr:
         listItem = ListItem(x.film)
@@ -146,6 +143,16 @@ def show_filmlist(filmlist_id, isDvd):
         addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
     endOfDirectory(plugin.handle)
 
+@plugin.route('/filmlist/<filmlist_id>/')
+def show_dvdlist(filmlist_id):
+    data = read.load_url('https://m.moviepilot.de/dvd/dvds-neu?start_date='+filmlist_id)
+    arr = main.listOfWeek(data)
+    for x in arr:
+        listItem = ListItem(x.film)
+        listItem.setArt({'poster':x.poster})
+        listItem.setInfo('video',infoLabels={ 'plot': x.plot, 'plotoutline': x.plotoutline })
+        addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
+    endOfDirectory(plugin.handle)
 
 @plugin.route('/trailerList/<trailerlist_id>')
 def show_trailerList(trailerlist_id):
