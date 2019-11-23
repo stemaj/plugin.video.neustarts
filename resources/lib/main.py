@@ -2,14 +2,14 @@ import re
 import datetime
 
 class Film():
-  def __init__(self, str1, str2, str3, str4, str5, str6, str7):
-        self.film = str1
-        self.link = str2
-        self.genre = str3
-        self.length = str4
-        self.plotoutline = str5
-        self.plot = str6
-        self.poster = str7
+  def __init__(self, film_, link_, genre_, length_, plotout_, plot_, poster_):
+        self.film = film_
+        self.link = link_
+        self.genre = genre_
+        self.length = length_
+        self.plotoutline = plotout_
+        self.plot = plot_
+        self.poster = poster_
 
 class Trailer():
   def __init__(self, str1, str2):
@@ -47,7 +47,7 @@ def listOfWeek(bytes):
   splits4 = splits3[1:len(splits3)]
   filme1 = []
   for data in splits4:
-      comp = re.compile("CUBOJ.+href=\"(.+)\" class=\"_2lnW0\" title=\"(.+)\" .+2hm9z.+srcset=\"(.+) 2x.+_2Ie5A.+[0-9]\">(.+)</div><div class=\"p7P3N.+<p>(.+)</p>.+3FIJo").findall(data)
+      comp = re.compile("a href=\"(.+)\".+IN_3r\" title=\"(.+)\" da.+_2lnW0.+srcset=\"(.+) 2x.+p7P3N.+<p>(.+)</p>.+3FIJo").findall(data)
       if len(comp) > 0:
         filme1.append(comp[0])
       else:
@@ -58,7 +58,7 @@ def listOfWeek(bytes):
   for x in range(0, len(filme1)):
     link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
     if len(filme1[x]) > 2:
-      filme.append(Film(filme1[x][1], link, '', '', filme1[x][3], filme1[x][4], filme1[x][2]))
+      filme.append(Film(filme1[x][1], link, '', '', '', filme1[x][3], filme1[x][2]))
     else:
       filme.append(Film(filme1[x][1], link, '', '', '', '', ''))
   return filme
@@ -94,7 +94,7 @@ def listOfStreaming(bytes):
   for data in splits4:
     compLink = re.compile("href=\"(.+)\"><link").findall(data)
     #compPic = re.compile("link\shref=(.+)\sitem.+poster--p").findall(data)
-    compName = re.compile(">(.+)</strong>\\n</h3>").findall(data)
+    compName = re.compile("<h3 class=.+'>(.+)<.+/h3>").findall(data)
     if len(compLink) > 0 and len(compName) > 0:# and len(compPic) > 0:
           filme1.append(compLink)
           filme2.append(compName)
@@ -115,7 +115,7 @@ def listOfTrailers(bytes):
   splits4 = splits3[:len(splits3)-1]
   trailer1 = []
   for data in splits4:
-    trailer1.append(re.compile("data-video-title='(.+)'\\shref='(.+)'>\\n<").findall(data)[0])
+    trailer1.append(re.compile("data-video-title='(.+)' href='(.+)'>").findall(data)[0])
   trailer = []
   for x in range(0, len(trailer1)):
     trailer.append(Trailer(trailer1[x][0], trailer1[x][1]))
