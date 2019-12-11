@@ -92,6 +92,7 @@ def show_category(category_id):
 def show_filmlist(filmlist_id):
     data = read.load_url('https://m.moviepilot.de/kino/kinoprogramm/demnaechst-im-kino?start_date='+filmlist_id)
     arr = main.listOfWeek(data)
+    log('##########LAENGE ARRAY##############'+str(len(arr)))
     for x in arr:
         listItem = ListItem(x.film)
         listItem.setArt({'poster':x.poster})
@@ -99,9 +100,9 @@ def show_filmlist(filmlist_id):
         addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
     endOfDirectory(plugin.handle)
 
-@plugin.route('/dvdlist/<filmlist_id>/')
-def show_dvdlist(filmlist_id):
-    data = read.load_url('https://m.moviepilot.de/dvd/dvds-neu?start_date='+filmlist_id)
+@plugin.route('/dvdlist/<dvdlist_id>/')
+def show_dvdlist(dvdlist_id):
+    data = read.load_url('https://m.moviepilot.de/dvd/dvds-neu?start_date='+dvdlist_id)
     arr = main.listOfWeek(data)
     for x in arr:
         listItem = ListItem(x.film)
