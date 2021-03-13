@@ -54,12 +54,16 @@ def listOfWeek(bytes):
         comp = re.compile("CUBOJ.+href=\"(.+)\" class=\"_2lnW0\" title=\"(.+)\" .+2hm9z").findall(data)
         if len(comp) > 0:
           filme1.append(comp[0])
+        else:
+          print("Nix found 2")
   filme = []
   for x in range(0, len(filme1)):
     link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
     if len(filme1[x]) > 2:
+      #print("\nX1 " + filme1[x][1] + "\nX2 " + link + "\nX3 " + filme1[x][3] + "\nX4 " + filme1[x][2])
       filme.append(Film(filme1[x][1], link, '', '', '', filme1[x][3], filme1[x][2]))
     else:
+      #print("X2 " + filme1[x][1] + link)
       filme.append(Film(filme1[x][1], link, '', '', '', '', ''))
   return filme
 
@@ -106,25 +110,24 @@ def listOfStreaming(bytes):
   return filme
 
 def listOfTrailers(bytes):
-  split1 = bytes.decode('utf-8').split('video--lightbox--playlists-wrapper')[1]
-  if ('Top Serien-Videos' not in split1):
-    split2 = split1.split('Top-Videos')[0]
+
+  data = bytes.decode('utf-8')
+  if ('Top Serien-Videos' not in data):
+    split1 = bytes.decode('utf-8').split('Neueste Trailer')[0]
   else:
-    split2 = split1.split('Top Serien-Videos')[0]
-  splits3 = split2.split('</li>')
-  splits4 = splits3[:len(splits3)-1]
-  trailer1 = []
-  for data in splits4:
-    trailer1.append(re.compile("data-video-title='(.+)' href='(.+)'>").findall(data)[0])
+    split1 = bytes.decode('utf-8').split('Top Serien-Videos')[0]
+  split1 = split1.split('video--lightbox--playlists-wrapper')[1]
+  data = re.compile("data-video-title='(.+)' href='(.+)'>").findall(split1)
   trailer = []
-  for x in range(0, len(trailer1)):
-    trailer.append(Trailer(trailer1[x][0], trailer1[x][1]))
+  for x in range(0, len(data)):
+    trailer.append(Trailer(data[x][0], data[x][1]))
   return trailer
 
 def getTrailerLink(bytes):
-  res = re.compile(b"og:video\" content=\"(.+)\">").findall(bytes)
-  if len(res) > 0:
-    return res[0]
-  return ''
+  res = re.compile(b"og:video\" content=\"(.+)\">").findall(bytes)[0]
+  ddd = res.decode('utf-8')
+  str = ddd.replace('https://www.dailymotion.com/video/', 'plugin://plugin.video.dailymotion_com/?url=')
+  str = str + '&mode=playVideo'
+  return str.encode()
 
 #test()

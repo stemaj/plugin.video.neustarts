@@ -18,8 +18,6 @@ class Test_ParseFiles(unittest.TestCase):
     self.assertEqual(14, len(arr))
     self.assertEqual('Shazam!', arr[0].film)
     self.assertEqual('http://m.moviepilot.de/movies/shazam--2/trailer', arr[0].link)
-    # self.assertEqual('Superhelden-Film, Komödie', arr[0].genre)
-    # self.assertEqual('132 Minuten', arr[0].length)
     self.assertEqual('Mit <b>Shazam!</b> wird ein weiterer DC-Comic zu Leinwandleben erweckt: der erste Captain Marvel. Der Junge Billy Batson wird darin Kraft des Zauberwortes Shazam! zum erwachsenen Superhelden.', arr[0].plot)
     self.assertEqual('https://assets.cdn.moviepilot.de/files/92744d7b1a5163c2acf54a68fbe8f38c5afa4365ab424a1b46a7e88fc45d/fill/348/500/De_Artwork_SHZAM.jpg', arr[0].poster)
 
@@ -27,23 +25,23 @@ class Test_ParseFiles(unittest.TestCase):
   def test_file001(self):
     a = read.load_file('001')
     arr = main.listOfTrailers(a)
-    self.assertEqual(10, len(arr))
-    self.assertEqual('Shazam - Trailer 2 (Deutsch) HD', arr[0].film)
-    self.assertEqual('https://www.moviepilot.de/movies/shazam--2/trailer/115774', arr[0].link)
-    self.assertEqual('Der neue Joker, Shazam und Wonder Woman | So geht es bei DC weiter!', arr[9].film)
-    self.assertEqual('https://www.moviepilot.de/movies/shazam--2/trailer/112351', arr[9].link)
+    self.assertEqual(12, len(arr))
+    self.assertEqual('Shazam - Trailer 2 (Deutsch) HD', arr[2].film)
+    self.assertEqual('https://m.moviepilot.de/movies/shazam--2/trailer/115992', arr[2].link)
+    self.assertEqual('Der neue Joker, Shazam und Wonder Woman | So geht es bei DC weiter!', arr[11].film)
+    self.assertEqual('https://m.moviepilot.de/movies/shazam--2/trailer/112351', arr[11].link)
 
 
   def test_file002(self):
     a = read.load_file('002')
     link = main.getTrailerLink(a)
-    self.assertEqual(b'https://cdnapisec.kaltura.com/p/1764171/sp/176417100/playManifest/entryId/1_h31zhkyy/format/url/protocol/https/flavorParamId/0', link)
+    self.assertEqual(b'plugin://plugin.video.dailymotion_com/?url=x7xj52f&mode=playVideo', link)
 
   
   def test_file003(self):
     a = read.load_file('003')
     arr = main.listOfSearch(a)
-    self.assertEqual(6, len(arr))
+    self.assertEqual(7, len(arr))
     self.assertEqual('Cold War', arr[0].film)
     self.assertEqual('http://m.moviepilot.de/movies/cold-war/trailer', arr[0].link)
     self.assertEqual('Cold Warriors', arr[5].film)

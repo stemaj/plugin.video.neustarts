@@ -99,3 +99,5 @@
 - route fix
 4.0.14
 - sleep after http request
+4.0.15
+- dailymotion support
