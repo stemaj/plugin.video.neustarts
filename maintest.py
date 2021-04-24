@@ -1,6 +1,7 @@
 import unittest
 from resources.lib import read
 from resources.lib import main
+from resources.lib import stringops
 
 # class Test_ReadComparing(unittest.TestCase):
 
@@ -56,13 +57,23 @@ class Test_ParseFiles(unittest.TestCase):
     self.assertEqual('http://m.moviepilot.de/serie/orphan-black/trailer', arr[0].link)
     self.assertEqual('Orphan Black - 7 Genes', arr[1].film)
     self.assertEqual('http://m.moviepilot.de/serie/orphan-black-7-genes/trailer', arr[1].link)
+
+  def test_file005(self):
+    a = read.load_file('005')
+    arr = main.listOfStreaming(a)
+    self.assertEqual(25, len(arr))
     
+
 
   def test_file007(self):
     a = read.load_file('007')
     arr = main.listOfTrailers(a)
     self.assertEqual(12, len(arr))
 
+  def test_stringops(self):
+    bla = "Bla bla blubs tattaaa toll"
+    val = stringops.extract_inner_part(bla, "bla ", " toll")
+    self.assertEqual(val, "blubs tattaaa")
 
 if __name__ == '__main__':
     unittest.main()

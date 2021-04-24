@@ -1,5 +1,6 @@
 import re
 import datetime
+from resources.lib import stringops
 
 class Film():
   def __init__(self, film_, link_, genre_, length_, plotout_, plot_, poster_):
@@ -87,28 +88,26 @@ def listOfSearch(bytes):
 
 
 
-def listOfStreaming(bytes):
-  split1 = bytes.decode('utf-8').split('archive-content')[1]
-  split2 = split1.split('clearfix js--pagination')[0]
-  splits3 = split2.split('itemprop=\"url\"')
-  splits4 = splits3[1:len(splits3)]
-  filme1 = []
-  filme2 = []
-  #filme3 = []
-  for data in splits4:
-    compLink = re.compile("href=\"(.+)\"><link").findall(data)
-    #compPic = re.compile("link\shref=(.+)\sitem.+poster--p").findall(data)
-    compName = re.compile("<h3 class=.+'>(.+)<.+/h3>").findall(data)
-    if len(compLink) > 0 and len(compName) > 0:# and len(compPic) > 0:
-          filme1.append(compLink)
-          filme2.append(compName)
-          #filme3.append(compPic)
-  filme = []
-  for x in range(0, len(filme1)):
-    link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
-    filme.append(Film(filme2[x][0], link, '', '', '', '', ''))#filme3[x][0]))
-  return filme
+def listOfStreaming(a):
 
+  val = stringops.extract_inner_part(str(a), "ol start", "ol>")
+  liste = val.split("/li>")
+  if len(liste) > 0:
+    liste.pop()
+  filme = []
+  for x in liste:
+    result = re.compile("href=\"(.+)\" class=\"cy7exv-1").findall(x)
+    link = ""
+    name = ""
+    if len(result) > 0:
+      link = 'http://m.moviepilot.de' + result[0] + '/trailer'
+    result = re.compile("<b>(.+)</b>").findall(x)
+    if len(result) > 0:
+      name = result[0]
+      print(name)
+    filme.append(Film(name, link, "", "", "", "", ""))
+  return filme
+ 
 def listOfTrailers(bytes):
 
   data = bytes.decode('utf-8')
