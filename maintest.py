@@ -1,4 +1,5 @@
 import unittest
+import datetime
 from resources.lib import read
 from resources.lib import main
 from resources.lib import stringops
@@ -13,8 +14,15 @@ from resources.lib import stringops
 
 class Test_ParseFiles(unittest.TestCase):
 
+  def test_webRequest_and_regex(self):
+    a = read.load_url('https://m.moviepilot.de/filme/beste/jahr-2021/online-amazon-prime/online-disney-plus/online-netflix?page=1')
+    self.assertFalse(isinstance(a, str))
+
+
+
   def test_file000(self):
     a = read.load_file('000')
+    self.assertFalse(isinstance(a, str))
     arr = main.listOfWeek(a)
     self.assertEqual(14, len(arr))
     self.assertEqual('Shazam!', arr[0].film)
@@ -62,9 +70,9 @@ class Test_ParseFiles(unittest.TestCase):
     a = read.load_file('005')
     arr = main.listOfStreaming(a)
     self.assertEqual(25, len(arr))
+    self.assertEqual('Malcolm &amp; Marie', arr[0].film)
+    self.assertEqual('http://m.moviepilot.de/movies/malcolm-marie/trailer', arr[0].link)
     
-
-
   def test_file007(self):
     a = read.load_file('007')
     arr = main.listOfTrailers(a)
@@ -74,6 +82,10 @@ class Test_ParseFiles(unittest.TestCase):
     bla = "Bla bla blubs tattaaa toll"
     val = stringops.extract_inner_part(bla, "bla ", " toll")
     self.assertEqual(val, "blubs tattaaa")
+
+  def test_jahr(self):
+    startjahr = int(datetime.date.today().year)
+    self.assertEqual(startjahr, 2021)
 
 if __name__ == '__main__':
     unittest.main()

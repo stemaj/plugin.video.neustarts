@@ -3,6 +3,7 @@
 import routing
 import logging
 import xbmcaddon
+import datetime
 from resources.lib import kodiutils
 from resources.lib import kodilogging
 from xbmcgui import ListItem
@@ -28,6 +29,8 @@ def index():
         show_category, "one1"), ListItem("DVDs kommend nach Startdatum"), True)
     addDirectoryItem(plugin.handle, plugin.url_for(
         show_category, "two1"), ListItem("DVDs bisher nach Startdatum"), True)
+    addDirectoryItem(plugin.handle, plugin.url_for(
+        show_category, "five"), ListItem("Streaming"), True)
     addDirectoryItem(plugin.handle, plugin.url_for(
         show_category, "three"), ListItem("Filme Suche"), True)
     addDirectoryItem(plugin.handle, plugin.url_for(
@@ -87,6 +90,26 @@ def show_category(category_id):
                 listItem.setInfo('video',infoLabels={ 'plot': x.plot, 'plotoutline': x.plotoutline })
                 addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
         endOfDirectory(plugin.handle)
+    if category_id == "five":
+        startjahr = int(datetime.date.today().year)
+        log('##########jahr##############'+str(startjahr))
+        for jahr in range(startjahr, startjahr-10,-1):
+            addDirectoryItem(plugin.handle, plugin.url_for(show_streamlist, str(jahr), 1), ListItem(str(jahr)), True)
+        endOfDirectory(plugin.handle)
+
+@plugin.route('/streamlist/<streamlist_id>/<seite>')
+def show_streamlist(streamlist_id, seite):
+    data = read.load_url('https://m.moviepilot.de/filme/beste/jahr-'+ streamlist_id +'/online-amazon-prime/online-disney-plus/online-netflix?page=' + str(seite))
+    arr = main.listOfStreaming(data)
+    log('##########YO##############' + str(len(arr)))
+    for x in arr:
+        listItem = ListItem(x.film)
+        listItem.setArt({'poster':x.poster})
+        listItem.setInfo('video',infoLabels={ 'plot': x.plot, 'plotoutline': x.plotoutline })
+        addDirectoryItem(plugin.handle, plugin.url_for(show_streamlist, x.link.replace('/','_')), listItem, True)
+    if len(arr) > 0:
+        addDirectoryItem(plugin.handle, plugin.url_for(show_streamlist, str(streamlist_id), int(seite)+1), ListItem('nächste Seite (' + str(int(seite)+1) + ')'), True)
+    endOfDirectory(plugin.handle)
 
 @plugin.route('/filmlist/<filmlist_id>')
 def show_filmlist(filmlist_id):
