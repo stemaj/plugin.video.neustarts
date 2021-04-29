@@ -96,25 +96,22 @@ def listOfSearch(bytes):
 
 
 def listOfStreaming(bytes):
-    a = bytes.decode('utf-8')
-    val = stringops.extract_inner_part(a, "ol start", "ol>")
-    liste = val.split("</div></div></div></li>")
+    val = stringops.extract_inner_part(bytes, b"ol start", b"ol>")
+    liste = val.split(b"</div></div></div></li>")
     if len(liste) > 0:
         liste.pop()
     filme = []
     for x in liste:
-        match = re.search(r"href=\"(.+)\" class=\"cy7exv-1", x)
+        match = re.search(b"href=\"(.+)\" class=\"cy7exv-1", x)
         #result = re.compile(r"href=\"(.+)\" class=\"cy7exv-1").findall(x)
         link = ""
         name = ""
         #if len(result) > 0:
-        link = 'http://m.moviepilot.de' + match.group(1) + '/trailer'
-        print(link)
-        match = re.search(r"G.>(.+)<\/span> <\/a>", x)
+        link = u'http://m.moviepilot.de' + match.group(1).decode('utf-8') + u'/trailer'
+        match = re.search(b"G.>(.+)</span>.+cy7exv-3", x)
         #result = re.compile(r"G.>(.+)<\/span> <\/a>").findall(x)
         #if len(result) > 0:
-        name = match.group(1)
-        print (name)
+        name = match.group(1).decode('utf-8')
         filme.append(Film(name, link, "", "", "", "", ""))
     return filme
 

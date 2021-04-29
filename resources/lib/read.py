@@ -19,4 +19,6 @@ def load_url(url):
 
     #log("#############STATUS##############"+ str(r.status))
     if (r.status == 200):
+        #with io.open('d:\\file.005', 'wb') as fo:
+        #    fo.write(r.data)
         return r.data
