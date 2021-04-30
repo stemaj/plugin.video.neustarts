@@ -93,7 +93,7 @@ def show_category(category_id):
     if category_id == "five":
         startjahr = int(datetime.date.today().year)
         log('##########jahr##############'+str(startjahr))
-        for jahr in range(startjahr, startjahr-10,-1):
+        for jahr in range(startjahr, startjahr-120,-1):
             addDirectoryItem(plugin.handle, plugin.url_for(show_streamlist, str(jahr), 1), ListItem(str(jahr)), True)
         endOfDirectory(plugin.handle)
 
@@ -106,7 +106,7 @@ def show_streamlist(streamlist_id, seite):
         listItem = ListItem(x.film)
         listItem.setArt({'poster':x.poster})
         listItem.setInfo('video',infoLabels={ 'plot': x.plot, 'plotoutline': x.plotoutline })
-        addDirectoryItem(plugin.handle, plugin.url_for(show_streamlist, x.link.replace('/','_')), listItem, True)
+        addDirectoryItem(plugin.handle, plugin.url_for(show_trailerList, x.link.replace('/','_')), listItem, True)
     if len(arr) > 0:
         addDirectoryItem(plugin.handle, plugin.url_for(show_streamlist, str(streamlist_id), int(seite)+1), ListItem('nächste Seite (' + str(int(seite)+1) + ')'), True)
     endOfDirectory(plugin.handle)

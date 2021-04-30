@@ -101,3 +101,5 @@
 - sleep after http request
 4.0.15
 - dailymotion support
+4.0.16
+- reactivate streaming

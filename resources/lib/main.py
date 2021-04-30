@@ -102,17 +102,23 @@ def listOfStreaming(bytes):
         liste.pop()
     filme = []
     for x in liste:
-        match = re.search(b"href=\"(.+)\" class=\"cy7exv-1", x)
-        #result = re.compile(r"href=\"(.+)\" class=\"cy7exv-1").findall(x)
         link = ""
+        match = re.search(b"href=\"(.+)\" class=\"cy7exv-1", x)
+        if match is not None:
+            link = u'http://m.moviepilot.de' + match.group(1).decode('utf-8') + u'/trailer'
         name = ""
-        #if len(result) > 0:
-        link = u'http://m.moviepilot.de' + match.group(1).decode('utf-8') + u'/trailer'
         match = re.search(b"G.>(.+)</span>.+cy7exv-3", x)
-        #result = re.compile(r"G.>(.+)<\/span> <\/a>").findall(x)
-        #if len(result) > 0:
-        name = match.group(1).decode('utf-8')
-        filme.append(Film(name, link, "", "", "", "", ""))
+        if match is not None:
+            name = match.group(1).decode('utf-8')
+        bild = ""
+        match = re.search(b"src=\"(.+)\" class=\".+srcSet", x)
+        if match is not None:
+            bild = match.group(1).decode('utf-8')
+        plot = ""
+        match = re.search(b"<p>(.+)<\/p>", x)
+        if match is not None:
+            plot = match.group(1).decode('utf-8')
+        filme.append(Film(name, link, "", "", plot, plot, bild))
     return filme
 
 
