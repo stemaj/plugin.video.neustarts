@@ -1,7 +1,7 @@
 import re
 import datetime
 from resources.lib import stringops
-
+from pyStemaj import bytesExtractor
 
 class Film():
     def __init__(self, film_, link_, genre_, length_, plotout_, plot_, poster_):
@@ -49,33 +49,29 @@ def getMonday(next, number):
 def listOfWeek(bytes):
     split1 = bytes.decode('utf-8').split('trackingCategory')[1]
     split2 = split1.split('</main>')[0]
-    splits3 = split2.split('_1rtC2')
+    splits3 = split2.split('posterId')
     splits4 = splits3[1:len(splits3)]
-    filme1 = []
-    for data in splits4:
-        comp = re.compile(
-            "a href=\"(.+)\".+IN_3r\" title=\"(.+)\" da.+_2lnW0.+srcset=\"(.+) 2x.+p7P3N.+<p>(.+)</p>.+3FIJo").findall(data)
-        if len(comp) > 0:
-            filme1.append(comp[0])
-        else:
-            comp = re.compile(
-                "CUBOJ.+href=\"(.+)\" class=\"_2lnW0\" title=\"(.+)\" .+2hm9z").findall(data)
-            if len(comp) > 0:
-                filme1.append(comp[0])
-            else:
-                print("Nix found 2")
     filme = []
-    for x in range(0, len(filme1)):
-        link = 'http://m.moviepilot.de' + filme1[x][0] + '/trailer'
-        if len(filme1[x]) > 2:
-            #print("\nX1 " + filme1[x][1] + "\nX2 " + link + "\nX3 " + filme1[x][3] + "\nX4 " + filme1[x][2])
-            filme.append(Film(filme1[x][1], link, '',
-                         '', '', filme1[x][3], filme1[x][2]))
-        else:
-            #print("X2 " + filme1[x][1] + link)
-            filme.append(Film(filme1[x][1], link, '', '', '', '', ''))
+    for data in splits4:
+        name = bytesExtractor.fromRegex(data, r"title(.+)rating")
+        if len(name) > 0:
+            name = bytesExtractor.extractInnerPart(name, '":"', '","')
+        print(name)
+        link = bytesExtractor.fromRegex(data, r"permalink(.+)teaser")
+        if len(link) > 0:
+            link = 'http://m.moviepilot.de/movies/' + bytesExtractor.extractInnerPart(link, '":"', '","') + '/trailer'
+        desc = bytesExtractor.fromRegex(data, r"teaser(.+)shortTeaser")
+        if len(desc) > 0:
+            desc = bytesExtractor.extractInnerPart(desc, '":"', '","')
+        bild = bytesExtractor.fromRegex(data, r"(.+)posterFilename")
+        bild2 = bytesExtractor.fromRegex(data, r"posterFilename(.+)rated")
+        if len(bild) > 1 and len(bild2) > 1:
+            bild = bytesExtractor.extractInnerPart(bild, '":"', '","')
+            bild2 = bytesExtractor.extractInnerPart(bild2, '":"', '","')
+            bild = 'https://assets.cdn.moviepilot.de/files/' + bild + '/fill/348/500/' + bild2
+        if len(name) > 0 and len(link) > 0:
+            filme.append(Film(name, link, '', '', '', desc, bild))
     return filme
-
 
 def listOfSearch(bytes):
     split1 = bytes.decode('utf-8').split('<!--{"results":')[1]

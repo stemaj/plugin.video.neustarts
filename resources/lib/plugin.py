@@ -10,8 +10,7 @@ from xbmcgui import ListItem
 from xbmcplugin import addDirectoryItem, endOfDirectory, setResolvedUrl
 from xbmc import log, Keyboard
 from resources.lib import main
-from resources.lib import read
-
+from pyStemaj import byteStream
 
 ADDON = xbmcaddon.Addon()
 logger = logging.getLogger(ADDON.getAddonInfo('id'))
@@ -69,7 +68,7 @@ def show_category(category_id):
         keyb.doModal()
         if keyb.isConfirmed():
             inp = keyb.getText()
-            data = read.load_url('https://m.moviepilot.de/suche?q=' + inp + '&type=movie')
+            data = byteStream.fromUrl('https://m.moviepilot.de/suche?q=' + inp + '&type=movie')
             arr = main.listOfSearch(data)
             for x in arr:
                 listItem = ListItem(x.film)
@@ -82,7 +81,7 @@ def show_category(category_id):
         keyb.doModal()
         if keyb.isConfirmed():
             inp = keyb.getText()
-            data = read.load_url('https://m.moviepilot.de/suche?q=' + inp + '&type=series')
+            data = byteStream.fromUrl('https://m.moviepilot.de/suche?q=' + inp + '&type=series')
             arr = main.listOfSearch(data)
             for x in arr:
                 listItem = ListItem(x.film)
@@ -99,7 +98,7 @@ def show_category(category_id):
 
 @plugin.route('/streamlist/<streamlist_id>/<seite>')
 def show_streamlist(streamlist_id, seite):
-    data = read.load_url('https://m.moviepilot.de/filme/beste/jahr-'+ streamlist_id +'/online-amazon-prime/online-disney-plus/online-netflix?page=' + str(seite))
+    data = byteStream.fromUrl('https://m.moviepilot.de/filme/beste/jahr-'+ streamlist_id +'/online-amazon-prime/online-disney-plus/online-netflix?page=' + str(seite))
     arr = main.listOfStreaming(data)
     log('##########YO##############' + str(len(arr)))
     for x in arr:
@@ -113,7 +112,7 @@ def show_streamlist(streamlist_id, seite):
 
 @plugin.route('/filmlist/<filmlist_id>')
 def show_filmlist(filmlist_id):
-    data = read.load_url('https://m.moviepilot.de/kino/kinoprogramm/demnaechst-im-kino?start_date='+filmlist_id)
+    data = byteStream.fromUrl('https://m.moviepilot.de/kino/kinoprogramm/demnaechst-im-kino?start_date='+filmlist_id)
     arr = main.listOfWeek(data)
     log('##########LAENGE ARRAY##############'+str(len(arr)))
     for x in arr:
@@ -125,7 +124,7 @@ def show_filmlist(filmlist_id):
 
 @plugin.route('/dvdlist/<dvdlist_id>/')
 def show_dvdlist(dvdlist_id):
-    data = read.load_url('https://m.moviepilot.de/dvd/dvds-neu?start_date='+dvdlist_id)
+    data = byteStream.fromUrl('https://m.moviepilot.de/dvd/dvds-neu?start_date='+dvdlist_id)
     arr = main.listOfWeek(data)
     for x in arr:
         listItem = ListItem(x.film)
@@ -136,11 +135,11 @@ def show_dvdlist(dvdlist_id):
 
 @plugin.route('/trailerList/<trailerlist_id>')
 def show_trailerList(trailerlist_id):
-    data = read.load_url(trailerlist_id.replace('_','/'))
+    data = byteStream.fromUrl(trailerlist_id.replace('_','/'))
     arr = main.listOfTrailers(data)
     for x in arr:
         log('##########LINK##############'+x.link)
-        data2 = read.load_url(x.link)
+        data2 = byteStream.fromUrl(x.link)
         xxx = main.getTrailerLink(data2).decode('utf-8')
         log('##########XXX##############'+xxx)
         listitem = ListItem(path=xxx , label=x.film)
