@@ -5,6 +5,7 @@ from pyStemaj import byteStream
 from pyStemaj import bytesExtractor
 from resources.lib import main
 from resources.lib import stringops
+import six
 
 # class Test_ReadComparing(unittest.TestCase):
 
@@ -16,15 +17,8 @@ from resources.lib import stringops
 
 class Test_ParseFiles(unittest.TestCase):
 
-  def test_webRequest_and_regex(self):
-    a = downloadFile.download('https://m.moviepilot.de/filme/beste/jahr-2021/online-amazon-prime/online-disney-plus/online-netflix?page=1')
-    self.assertFalse(isinstance(a, str))
-
-
-
   def test_file000(self):
     a = byteStream.fromFile('tests/file.000')
-    self.assertFalse(isinstance(a, str))
     arr = main.listOfWeek(a)
     self.assertEqual(14, len(arr))
     self.assertEqual('Shazam!', arr[0].film)

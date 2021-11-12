@@ -1,5 +1,6 @@
 import re
 import datetime
+import six
 from resources.lib import stringops
 from pyStemaj import bytesExtractor
 
@@ -55,19 +56,19 @@ def listOfWeek(bytes):
     for data in splits4:
         name = bytesExtractor.fromRegex(data, r"title(.+)rating")
         if len(name) > 0:
-            name = bytesExtractor.extractInnerPart(name, '":"', '","')
+            name = six.ensure_str(bytesExtractor.extractInnerPart(name, six.b(":\""), six.b("\",")))
         print(name)
         link = bytesExtractor.fromRegex(data, r"permalink(.+)teaser")
         if len(link) > 0:
-            link = 'http://m.moviepilot.de/movies/' + bytesExtractor.extractInnerPart(link, '":"', '","') + '/trailer'
+            link = 'http://m.moviepilot.de/movies/' + six.ensure_str(bytesExtractor.extractInnerPart(link, six.b(":\""), six.b("\","))) + '/trailer'
         desc = bytesExtractor.fromRegex(data, r"teaser(.+)shortTeaser")
         if len(desc) > 0:
-            desc = bytesExtractor.extractInnerPart(desc, '":"', '","')
+            desc = six.ensure_str(bytesExtractor.extractInnerPart(desc, six.b(":\""), six.b("\",")))
         bild = bytesExtractor.fromRegex(data, r"(.+)posterFilename")
         bild2 = bytesExtractor.fromRegex(data, r"posterFilename(.+)rated")
         if len(bild) > 1 and len(bild2) > 1:
-            bild = bytesExtractor.extractInnerPart(bild, '":"', '","')
-            bild2 = bytesExtractor.extractInnerPart(bild2, '":"', '","')
+            bild = six.ensure_str(bytesExtractor.extractInnerPart(bild, six.b(":\""), six.b("\",")))
+            bild2 = six.ensure_str(bytesExtractor.extractInnerPart(bild2, six.b(":\""), six.b("\",")))
             bild = 'https://assets.cdn.moviepilot.de/files/' + bild + '/fill/348/500/' + bild2
         if len(name) > 0 and len(link) > 0:
             filme.append(Film(name, link, '', '', '', desc, bild))

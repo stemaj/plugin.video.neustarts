@@ -2,8 +2,9 @@
 <addon id="plugin.video.neustarts" name="Neustarts" version="4.1.0" provider-name="stemaj">
     <requires>
         <import addon="script.module.routing" version="0.2.3"/>
-        <import addon="script.module.urllib3" version="1.26"/>
-        <import addon="plugin.video.dailymotion_com" version="2.4.2"/>
+        <import addon="script.module.urllib3" version="1.25"/>
+        <import addon="script.module.six" version="1.15"/>
+        <import addon="plugin.video.dailymotion_com" version="2.4.3"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>video</provides>
