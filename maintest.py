@@ -20,11 +20,11 @@ class Test_ParseFiles(unittest.TestCase):
   def test_file000(self):
     a = byteStream.fromFile('tests/file.000')
     arr = main.listOfWeek(a)
-    self.assertEqual(14, len(arr))
-    self.assertEqual('Shazam!', arr[0].film)
-    self.assertEqual('http://m.moviepilot.de/movies/shazam--2/trailer', arr[0].link)
-    self.assertEqual('<p&gt;Mit <b&gt;Shazam!</b&gt; wird ein weiterer DC-Comic zu Leinwandleben erweckt: der erste Captain Marvel. Der Junge Billy Batson wird darin Kraft des Zauberwortes Shazam! zum erwachsenen Superhelden.</p&gt;', arr[0].plot)
-    self.assertEqual('https://assets.cdn.moviepilot.de/files/92744d7b1a5163c2acf54a68fbe8f38c5afa4365ab424a1b46a7e88fc45d/fill/348/500/De_Artwork_SHZAM.jpg', arr[0].poster)
+    self.assertEqual(7, len(arr))
+    self.assertEqual('Scream', arr[0].film)
+    self.assertEqual('http://m.moviepilot.de/movies/scream-5/trailer', arr[0].link)
+    self.assertEqual('<p&gt;In <b&gt;Scream </b&gt;kehrt nach jahrelanger Abwesenheit das Grauen unter der Maske des Ghostface-Killers nach Woodsboro zurück.</p&gt;', arr[0].plot)
+    self.assertEqual('https://assets.cdn.moviepilot.de/files/3e22c6ed08b4ded5d6cb10db21a6cc285afbc63c0b83c56f580006cf74c4/fill/348/500/SCM_INTL_DIGITAL_MONTAGE_TEASER_1_SHEET_GER.jpg', arr[0].poster)
 
 
   def test_file001(self):
@@ -66,8 +66,8 @@ class Test_ParseFiles(unittest.TestCase):
     a = byteStream.fromFile('tests/file.005')
     arr = main.listOfStreaming(a)
     self.assertEqual(25, len(arr))
-    self.assertEqual('Malcolm &amp; Marie', arr[0].film)
-    self.assertEqual('http://m.moviepilot.de/movies/malcolm-marie/trailer', arr[0].link)
+    self.assertEqual('Bo Burnham: Inside', arr[0].film)
+    self.assertEqual('http://m.moviepilot.de/movies/bo-burnham-inside/trailer', arr[0].link)
     
   def test_file007(self):
     a = byteStream.fromFile('tests/file.007')
@@ -81,7 +81,7 @@ class Test_ParseFiles(unittest.TestCase):
 
   def test_jahr(self):
     startjahr = int(datetime.date.today().year)
-    self.assertEqual(startjahr, 2021)
+    self.assertEqual(startjahr, 2022)
 
   def test_2(self):
     a = bytesExtractor.extractInnerPart(b'":"deutsch-werden","showtimesCount":1,"', b'":"', b'","')

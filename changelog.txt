@@ -103,3 +103,7 @@
 - dailymotion support
 4.0.16
 - reactivate streaming
+4.1.0
+- python 2 compatibility
+4.1.1
+- fix streaming / fotos

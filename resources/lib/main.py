@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 import datetime
 import six
@@ -48,8 +50,7 @@ def getMonday(next, number):
 
 
 def listOfWeek(bytes):
-    split1 = bytes.decode('utf-8').split('trackingCategory')[1]
-    split2 = split1.split('</main>')[0]
+    split2 = six.ensure_str(bytesExtractor.extractInnerPart(bytes, six.ensure_str("alle Filme auf einen Blick"), six.ensure_str("dialogue")))
     splits3 = split2.split('posterId')
     splits4 = splits3[1:len(splits3)]
     filme = []
@@ -57,19 +58,28 @@ def listOfWeek(bytes):
         name = bytesExtractor.fromRegex(data, r"title(.+)rating")
         if len(name) > 0:
             name = six.ensure_str(bytesExtractor.extractInnerPart(name, six.b(":\""), six.b("\",")))
-        print(name)
+        else:
+            print('missing name')
         link = bytesExtractor.fromRegex(data, r"permalink(.+)teaser")
         if len(link) > 0:
-            link = 'http://m.moviepilot.de/movies/' + six.ensure_str(bytesExtractor.extractInnerPart(link, six.b(":\""), six.b("\","))) + '/trailer'
+            link = six.ensure_str('http://m.moviepilot.de/movies/') + six.ensure_str(bytesExtractor.extractInnerPart(link, six.b(":\""), six.b("\","))) + six.ensure_str('/trailer')
+        else:
+            print('missing link')
         desc = bytesExtractor.fromRegex(data, r"teaser(.+)shortTeaser")
         if len(desc) > 0:
             desc = six.ensure_str(bytesExtractor.extractInnerPart(desc, six.b(":\""), six.b("\",")))
+        else:
+            print('missing desc')
         bild = bytesExtractor.fromRegex(data, r"(.+)posterFilename")
         bild2 = bytesExtractor.fromRegex(data, r"posterFilename(.+)rated")
+        if len(bild2) == 0:
+            bild2 = bytesExtractor.fromRegex(data, r"posterFilename(.+)permalink")
         if len(bild) > 1 and len(bild2) > 1:
             bild = six.ensure_str(bytesExtractor.extractInnerPart(bild, six.b(":\""), six.b("\",")))
             bild2 = six.ensure_str(bytesExtractor.extractInnerPart(bild2, six.b(":\""), six.b("\",")))
             bild = 'https://assets.cdn.moviepilot.de/files/' + bild + '/fill/348/500/' + bild2
+        else:
+            print('missing bild')
         if len(name) > 0 and len(link) > 0:
             filme.append(Film(name, link, '', '', '', desc, bild))
     return filme
@@ -93,29 +103,37 @@ def listOfSearch(bytes):
 
 
 def listOfStreaming(bytes):
-    val = stringops.extract_inner_part(bytes, b"ol start", b"ol>")
-    liste = val.split(b"</div></div></div></li>")
+    val = six.ensure_str(bytesExtractor.extractInnerPart(bytes, six.ensure_str("Du sortierst nach"), six.ensure_str("Zur nächsten Seite")))
+    liste = val.split("</div></div></div></li>")
     if len(liste) > 0:
         liste.pop()
     filme = []
     for x in liste:
-        link = ""
-        match = re.search(b"href=\"(.+)\" class=\"cy7exv-1", x)
-        if match is not None:
-            link = u'http://m.moviepilot.de' + match.group(1).decode('utf-8') + u'/trailer'
-        name = ""
-        match = re.search(b"G.>(.+)</span>.+cy7exv-3", x)
-        if match is not None:
-            name = match.group(1).decode('utf-8')
-        bild = ""
-        match = re.search(b"src=\"(.+)\" class=\".+srcSet", x)
-        if match is not None:
-            bild = match.group(1).decode('utf-8')
-        plot = ""
-        match = re.search(b"<p>(.+)<\/p>", x)
-        if match is not None:
-            plot = match.group(1).decode('utf-8')
-        filme.append(Film(name, link, "", "", plot, plot, bild))
+        name = bytesExtractor.fromRegex(x, r"gpEclt\">(.+)</span.+coun")
+        if len(name) > 0:
+            name = six.ensure_str(name)
+        else:
+            print('missing name')
+        link = bytesExtractor.fromRegex(x, r"a href=\"(.+)/trailer")
+        if len(link) > 0:
+            link = six.ensure_str("http://m.moviepilot.de" + link + "/trailer")
+        else:
+            print('missing link')
+        bild = bytesExtractor.fromRegex(x, r"files/(.+)/fill/155")
+        bild2 = bytesExtractor.fromRegex(x, r"fill/310/446/(.+).jpg\ ")
+        if len(bild) > 1 and len(bild2) > 1:
+            bild = six.ensure_str('https://assets.cdn.moviepilot.de/files/' + bild + '/fill/348/500/' + bild2 + ".jpg")
+        elif len(bild2) == 0:
+            bild2 = bytesExtractor.fromRegex(x, r"fill/310/446/(.+).jpeg\ ")
+            bild = six.ensure_str('https://assets.cdn.moviepilot.de/files/' + bild + '/fill/348/500/' + bild2 + ".jpeg")
+        else:
+            print('missing bild')
+        desc = bytesExtractor.fromRegex(x, r"<p>(.+)</p>")
+        if len(desc) > 0:
+            desc = six.ensure_str(desc)
+        else:
+            print('missing desc')
+        filme.append(Film(name, link, "", "", "", desc, bild))
     return filme
 
 
