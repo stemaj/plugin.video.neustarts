@@ -68,7 +68,16 @@ class Test_ParseFiles(unittest.TestCase):
     self.assertEqual(25, len(arr))
     self.assertEqual('Bo Burnham: Inside', arr[0].film)
     self.assertEqual('http://m.moviepilot.de/movies/bo-burnham-inside/trailer', arr[0].link)
-    
+
+  def test_file006(self):
+    a = byteStream.fromFile('tests/file.006')
+    arr = main.listOfWeek(a)
+    self.assertEqual(11, len(arr))
+    self.assertEqual('Fabian oder Der Gang vor die Hunde', arr[0].film)
+    self.assertEqual('http://m.moviepilot.de/movies/fabian-oder-der-gang-vor-die-hunde/trailer', arr[0].link)
+    self.assertEqual('<p&gt;In Dominik Grafs <b&gt;Fabian oder der Gang vor die Hunde </b&gt;versucht Tom Schilling Anfang der 1930er Jahre als Werbetexter seine Würde zu bewahren, während politische Umbrüche in Deutschland vorgehen.</p&gt;', arr[0].plot)
+    self.assertEqual('https://assets.cdn.moviepilot.de/files/9adc059f550b7e24fa50f47703dfd61da58959d355ac954c37af372ea154/fill/348/500/Fabian-Artworks_Final_Gelb.jpg', arr[0].poster)
+
   def test_file007(self):
     a = byteStream.fromFile('tests/file.007')
     arr = main.listOfTrailers(a)

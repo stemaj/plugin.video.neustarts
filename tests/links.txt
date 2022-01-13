@@ -16,6 +16,9 @@ https://m.moviepilot.de/suche?q=orphan%20black&type=series
 file.005 - 25 Filme
 https://m.moviepilot.de/filme/beste/jahr-2021/online-amazon-prime/online-disney-plus/online-netflix?page=1
 
+file.006
+https://m.moviepilot.de/dvd/dvds-neu?start_date=2022-01-10
+
 file.007 - 8 trailer, 2 specails, 2 sonstige
 https://m.moviepilot.de/serie/orphan-black/trailer
 

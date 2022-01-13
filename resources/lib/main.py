@@ -50,7 +50,7 @@ def getMonday(next, number):
 
 
 def listOfWeek(bytes):
-    split2 = six.ensure_str(bytesExtractor.extractInnerPart(bytes, six.ensure_str("alle Filme auf einen Blick"), six.ensure_str("dialogue")))
+    split2 = six.ensure_str(bytesExtractor.extractInnerPart(bytes, six.ensure_str("layout--background"), six.ensure_str("dialogue")))
     splits3 = split2.split('posterId')
     splits4 = splits3[1:len(splits3)]
     filme = []
